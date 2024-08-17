@@ -1,0 +1,58 @@
+.container {
+    width: 1000px;
+    /* margin: 0 auto; 안먹힘.. */
+}
+
+.container div{
+    border : 1px solid #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.container div p {
+    display: inline-block;
+    min-width: 100px; height: 50px;
+    margin: 10px;
+    text-align: center;
+    /* line-height: 10px; */
+}
+
+.match {
+    width: 400px;
+}
+
+.container img {
+    width: 30px;
+}
+
+/* .container {
+    width: 1000px;
+}
+
+.container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    text-align: left;
+}
+
+.container table thead tr {
+    background-color: #ffffff;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+.container table th, .container table td {
+    padding: 12px 15px;
+    width: 50px;
+}
+
+.container table tbody tr {
+    border: 1px solid #ffffff;
+    border-radius: 50px; 안먹힘...; 
+}
+
+.container img {
+    width: 50px;
+} */
