@@ -1,4 +1,4 @@
-import styles from "../../../(home)/home.module.css"
+import styles from "../../../../styles/team-info.module.css"
 import { getTeam } from "../../../../service/baseball/apis";
 
 
@@ -16,27 +16,26 @@ export async function generateMetadata({params : {name}} : IParams) {
 export default async function BaseBallMatchSchedule() {
     const teams = await getTeam("all");
 
-    return <div className={styles.container}>
-        <table>
+    return <div>
+        <table className={styles.container}>
             <thead>
                 <tr>
                     <th>순위</th>
                     <th>팀명</th>
+                    <th>이미지</th>
                     <th>승</th>
                     <th>무</th>
                     <th>패</th>
                 </tr>
             </thead>
             <tbody>
-                {teams.result.map(team => <tr>
+                {teams.result.map(team => <tr key={team.idx}>
                     <td>{team.rank}</td>
                     <td>{team.name}</td>
+                    <td><img src={team.imgUrl} alt={team.teamCode} /></td>
                     <td>{team.win}</td>
                     <td>{team.loose}</td>
-                    <td>{team.draw}</td>
-                    <table>
-                        <thead></thead>
-                    </table>
+                    <td>{team.draw}</td>                        
                 </tr>)}
             </tbody>
         </table>
