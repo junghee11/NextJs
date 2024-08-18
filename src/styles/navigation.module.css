@@ -1,7 +1,7 @@
 .nav {
     background-color: #2d2d2d;
     position: fixed;
-    width: 30%;
+    width: 60%;
     margin : 0 auto;
     top: 20px;
     border-radius: 50px;
@@ -21,6 +21,7 @@
     list-style: none;
     transform: none;
     transition : all 0.1s ease-in-out;
+    color : white;
 }
 
 .nav ul li:hover{
