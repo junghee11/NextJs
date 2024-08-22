@@ -5,9 +5,9 @@ import Navigation from "../components/navigation"
 export const metadata : Metadata = {
   title: {
     template : '%s | I ❤ baseball',
-    default : "Baseball Info"
+    default : "Baseball Hub"
   } ,
-  description: 'Baseball Info',
+  description: 'Baseball Hub',
 }
 
 export default function RootLayout({
