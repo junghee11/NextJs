@@ -34,11 +34,6 @@ class ApiClient {
                     config.headers.Authorization = `Bearer ${refreshToken}`;
                     config.params.type = "refresh";
 
-                    // let path = sessionStorage.getItem("lastPath");
-                    // if (path) {
-                    //     window.location.href = path;
-                    // }
-
                     return config;
                 }
                 return config;
@@ -54,7 +49,7 @@ class ApiClient {
             },
             (error) => {
                 console.log(error.response.data.message)
-              return Promise.reject(error.response.data);
+                return Promise.reject(error.response.data);
             }
           );
     }
