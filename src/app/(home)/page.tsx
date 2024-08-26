@@ -1,13 +1,11 @@
-"use client"
-
 import styles from "../(home)/home.module.css"
 import Login from "../../components/user/login";
 import UserInfo from "../../components/user/userInfo";
 import { getUserInfo } from "../../service/user/apis";
 
-// export const metadata = {
-//     title : "Home",
-// }
+export const metadata = {
+    title : "Home",
+}
 
 export default async function HomePage() {
     const userInfo = await getUserInfo();

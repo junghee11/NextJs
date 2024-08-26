@@ -12,7 +12,6 @@ export const userLogin = async (id: string, password: string) => {
             maxAge: 60 * 30,
         });
 
-        window.location.reload();
         // let path = sessionStorage.getItem("lastPath");
         // if (path) {
         //     window.location.href = path;
@@ -21,8 +20,7 @@ export const userLogin = async (id: string, password: string) => {
         return response;
     })
     .catch(error => {
-        error.message
-        window.location.href = "/user/login";
+        alert(error.message);
     });
 };
 

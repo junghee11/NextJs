@@ -1,6 +1,6 @@
 .container {
     width: 1000px;
-    /* margin: 0 auto; 안먹힘.. */
+    margin: 0 auto; 
 }
 
 .container div{
@@ -25,11 +25,7 @@
     width: 30px;
 }
 
-/* .container {
-    width: 1000px;
-}
-
-.container table {
+/* .container table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
@@ -50,7 +46,7 @@
 
 .container table tbody tr {
     border: 1px solid #ffffff;
-    border-radius: 50px; 안먹힘...; 
+    border-radius: 50px; 
 }
 
 .container img {

@@ -1,5 +1,3 @@
-"use client"
-
 import {deleteCookie, getCookie} from "cookies-next";
 import styles from "../../styles/user/login.module.css"
 

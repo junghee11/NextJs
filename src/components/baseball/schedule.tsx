@@ -1,5 +1,5 @@
 import getMatchSchedule from "../../service/baseball/apis";
-import styles from "../../styles/team-info.module.css";
+import styles from "../../styles/baseball/schedule.module.css";
 import Link from "next/link";
 
 interface IMatchProps {

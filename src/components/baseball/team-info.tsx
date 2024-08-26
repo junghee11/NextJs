@@ -1,6 +1,8 @@
-import styles from "../styles/movie-info.module.css";
+import styles from "../../styles/baseball/team-info.module.css";
 import { getTeam } from "../../service/baseball/apis";
 
+
+// TODO : 연결해줘야함. ALL이 아닌경우 팀별 상세정보 페이지 
 export default async function teamInfo({name} : {name:string}) {
     const team = await getTeam(name);
     return <div className={styles.container}>

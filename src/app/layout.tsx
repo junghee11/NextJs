@@ -1,6 +1,7 @@
 import "../styles/global.css"
 import { Metadata } from "next"
 import Navigation from "../components/navigation"
+import Footer from "../components/footer/footer"
 
 export const metadata : Metadata = {
   title: {
@@ -17,8 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Navigation></Navigation>
-      <body>{children}</body>
+      <body>
+        <Navigation></Navigation>
+        <div style={{minHeight : "calc(100vh - 230px)"}}>{children}</div>
+        <Footer></Footer>
+        </body>
     </html>
   )
 }

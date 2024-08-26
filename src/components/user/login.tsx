@@ -13,6 +13,7 @@ export default function Login() {
         event.preventDefault();
         try { 
             const response = userLogin(userId, password);
+            // window.location.reload();
             console.log('로그인 성공:', response);
         } catch (error) {
             console.error('로그인 실패:', error);

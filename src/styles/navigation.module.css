@@ -14,7 +14,7 @@
 .nav ul {
     display: flex;
     justify-content: center;
-    gap: 50px;
+    gap: 35px;
 }
 
 .nav ul li {
