@@ -1,6 +1,17 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import {CookieValueTypes, getCookie, setCookie} from "cookies-next";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import Cookies from 'js-cookie';
+import {getCookie, setCookie} from "cookies-next";
 const apiUrl = process.env.NEXT_PUBLIC_DEV_API_URL;
+
+const baseURL = apiUrl;
+export const Axios = axios.create({
+    timeout:7500,
+    baseURL
+})
+
+interface AxiosCustomConfig extends AxiosRequestConfig {
+    private?: boolean;
+}
 
 class ApiClient {
     private client : AxiosInstance;
@@ -21,8 +32,12 @@ class ApiClient {
     private initializeInterceptors() {
         this.client.interceptors.request.use(
             (config: InternalAxiosRequestConfig) => {
-                const accessToken = getCookie("access_token");
-                const refreshToken = getCookie("refresh_token");
+                // const accessToken = getCookie("access_token");
+                // const refreshToken = getCookie("refresh_token");
+                const accessToken = Cookies.get('access_token');
+                const refreshToken = Cookies.get('refresh_token');
+                console.log("accessToken = ", accessToken);
+                
                 if (accessToken) {
                     config.headers.Authorization = `Bearer ${accessToken}`;
                     return config;
@@ -54,20 +69,24 @@ class ApiClient {
           );
     }
 
-    public get<T>(url: string, params?: Record<string, unknown>): Promise<AxiosResponse<T>> {
-        return this.client.get<T>(url, { params });
+    public async get<T>(url: string, config?: AxiosCustomConfig) {
+        const result = await Axios.get<T>(url, config);
+        return result.data;
     }
 
-    public post<T>(url: string, body?:any): Promise<AxiosResponse<T>> {
-        return this.client.post<T>(url, body);
+    public async post<T>(url: string, body?:any, config?: AxiosCustomConfig) {
+        const result = await Axios.post<T>(url, body, config);
+        return result.data;
     }
 
-    public put<T>(url: string, data?: unknown): Promise<AxiosResponse<T>> {
-        return this.client.put<T>(url, data);
+    public async put<T>(url: string, body?:any, config?: AxiosCustomConfig) {
+        const result = await Axios.put<T>(url, body, config);
+        return result.data;
     }
 
-    public delete<T>(url: string): Promise<AxiosResponse<T>> {
-        return this.client.delete<T>(url);
+    public async delete<T>(url: string, config?: AxiosCustomConfig) {
+        const result = await Axios.delete<T>(url, config);
+        return result.data;
     }
 }
 

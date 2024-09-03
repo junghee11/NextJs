@@ -1,4 +1,4 @@
-import getMatchSchedule from "../../service/baseball/apis";
+import { getMatchSchedule } from "../../service/baseball/apis";
 import styles from "../../styles/baseball/schedule.module.css";
 import Link from "next/link";
 
