@@ -1,9 +1,12 @@
 import styles from "../../../(home)/home.module.css"
+import TeamSelector from "../../../../components/baseball/team-selector";
 import Match from "../../../../components/baseball/schedule";
 import { getTeam } from "../../../../service/baseball/apis";
 
 interface IParams {
-    params : {name:string}
+    params : {
+        name:string
+    }
 }
 
 export async function generateMetadata({params : {name}} : IParams) {
@@ -13,9 +16,11 @@ export async function generateMetadata({params : {name}} : IParams) {
     }
 }
 
-export default async function BaseBallMatchSchedule() {
-    // const params = useSearchParams();
+export default async function BaseBallMatchSchedule({params : {name}} : IParams) {    
     return <div className={styles.container}>
+        <div>
+            <TeamSelector selectedTeam={name} />
+        </div>
         <Match 
             team="all" 
         ></Match>

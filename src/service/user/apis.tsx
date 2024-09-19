@@ -21,7 +21,7 @@ export const userLogin = async (id: string, password: string) => {
         return response;
     })
     .catch(error => {
-        alert(error.message);
+        alert(error.response.data.message);
     });
 };
 

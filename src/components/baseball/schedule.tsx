@@ -9,7 +9,12 @@ interface IMatchProps {
 export default async function Match({team} : IMatchProps) {
     const schedules = await getMatchSchedule(team.toUpperCase());
 
-    return <div className={styles.container}>
+    if (schedules.result.length == 0) {
+        return <div>
+            <div><p>오늘은 경기가 없습니다..</p></div>
+        </div>
+    } else {
+        return <div className={styles.container}>
                 {schedules.result.map(schedule => 
                 <div key={schedule.idx}>
                     <p>{schedule.matchDate}</p>
@@ -27,40 +32,6 @@ export default async function Match({team} : IMatchProps) {
                     <p><Link prefetch href={`../match/${schedule.idx}`}>{schedule.matchResult}</Link></p>
                 </div>
                 )}
-    </div>
-
-    // return <div className={styles.container}>
-    //     <table>
-    //         {/* <thead>
-    //             <tr>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //                 <th></th>
-    //             </tr>
-    //         </thead> */}
-    //         <tbody>
-    //             {schedules.result.map(schedule => <tr key={schedule.idx}>
-    //                 <td>{schedule.matchDate}</td>
-    //                 <td>{schedule.matchTime}</td>
-    //                 <td><img src={schedule.homeImgUrl} alt={schedule.homeTeam} /> </td>
-    //                 <td>{schedule.homeTeam}</td>
-    //                 <td>{schedule.homeScore}</td>
-    //                 <td> : </td>
-    //                 <td>{schedule.awayScore}</td>
-    //                 <td><img src={schedule.awayImgUrl} alt={schedule.awayTeam} /> </td>
-    //                 <td>{schedule.awayTeam}</td>
-    //                 <td>{schedule.stadium}</td>
-    //                 <td><Link prefetch href={`../match/${schedule.idx}`}>{schedule.matchResult}</Link></td>
-    //             </tr>)}
-    //         </tbody>
-    //     </table>
-    // </div>
+            </div>
+    }
 }
