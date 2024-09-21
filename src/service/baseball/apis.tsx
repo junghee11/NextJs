@@ -18,3 +18,11 @@ export const getStadiumInfo = async (type: string, keyword : string) => {
         return await api.get(`/baseball/stadium?type=${type}&keyword=${keyword}`);
     }
 }
+
+export const getPlayerInfo = async (type: string, keyword : string) => {
+    if(!type) {
+        return await api.get(`/baseball/player?type=all`);
+    } else {
+        return await api.get(`/baseball/player?type=${type}&keyword=${keyword}`);
+    }
+}

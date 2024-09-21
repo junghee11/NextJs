@@ -1,0 +1,32 @@
+.container {
+    width: 840px;
+    margin: 0 auto 100px; 
+}
+
+.playerBox {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+}
+
+.player {
+    margin: 20px 20px;
+    text-align: center;
+}
+
+.player img {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.player table {
+    display: inline-block;
+    border-collapse : collapse;
+    margin: 10px 0;
+}
+
+.player th {
+    border: 1px solid white;
+    width: 70px;
+    height: 40px;
+    vertical-align : middle;
+}
