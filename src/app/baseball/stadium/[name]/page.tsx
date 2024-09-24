@@ -24,9 +24,12 @@ export default async function StadiumInfo({params : {name}} : IParams) {
             <TeamSelector selectedTeam={name} />
         </div>
         {stadiums.result.map(stadium => <div className={styles.stadium} key={stadium.idx}>
-                    <h3>▶ {stadium.name}({stadium.team})</h3>
-                    <p>{stadium.address}</p>
-                    <p>티켓예매링크 : <a href={stadium.ticket_link}>{stadium.ticket_link}</a></p>
+                    <img src={stadium.imgUrl} alt="" />
+                    <div>
+                        <h3><a href={"detail/" + stadium.idx}>▶ {stadium.name}({stadium.team})</a></h3>
+                        <p>{stadium.address}</p>
+                        <p>티켓예매링크 : <a href={stadium.ticketLink}>{stadium.ticketLink}</a></p>
+                    </div>
                 </div>)}
     </div>;
 }

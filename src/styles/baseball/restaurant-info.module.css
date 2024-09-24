@@ -1,0 +1,32 @@
+.container {
+    width: 700px;
+    margin: 0 auto 100px; 
+}
+
+.restaurant {
+    margin-bottom: 30px;
+    display: flex;
+}
+
+.restaurant img {
+    width: 250px;
+    margin-right: 20px;
+}
+
+.restaurant div {
+    width: 450px;
+}
+
+.food {
+    display: flex;
+    margin: 20px;
+}
+
+.food img {
+    width: 180px;
+    margin-right: 20px;
+}
+
+.food div {
+    width: 400px;
+}

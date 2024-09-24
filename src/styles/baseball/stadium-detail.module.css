@@ -5,14 +5,8 @@
 
 .stadium {
     margin-bottom: 30px;
-    display: flex;
 }
 
 .stadium img {
-    width: 250px;
-    padding-right: 15px;
-}
-
-.stadium div {
     width: 400px;
 }

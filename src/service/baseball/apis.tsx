@@ -26,3 +26,7 @@ export const getPlayerInfo = async (type: string, keyword : string) => {
         return await api.get(`/baseball/player?type=${type}&keyword=${keyword}`);
     }
 }
+
+export const getRestaurantInfo = async (id: number) => {
+    return await api.get(`/baseball/restaurant/${id}`);
+}
