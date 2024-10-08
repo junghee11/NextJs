@@ -1,5 +1,5 @@
-export type TeamCode = "KIA" | "SAMSUNG" | "LG" | "DOOSAN" | "SSG" | "KT" | "HANHWA" | "LOTTE" 
-| "NC" | "KIWOOM" ;
+export type TeamCode = "ALL" | "KIA" | "SAMSUNG" | "LG" | "DOOSAN" | "SSG" | "KT" | 
+"HANHWA" | "LOTTE" | "NC" | "KIWOOM" ;
 
 export type TeamName = "KIA 타이거즈" | "삼성 라이온즈" | "LG 트윈즈" | "두산 베어스" | "SSG 랜더스" 
 | "KT wiz" | "한화 이글스" | "롯데 자이언츠" | "NC 디아노스" | "키움 히어로즈";

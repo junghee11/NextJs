@@ -1,0 +1,61 @@
+.container {
+    width: 700px;
+    margin: 0 auto 100px; 
+}
+
+.goodsBox {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+}
+
+.goods {
+    font-size: 20px;
+}
+
+.goods div button:nth-child(5) {
+    background-color: white;
+    color: black;
+    width: 310px;
+}
+
+.goods div button {
+    width: 150px;
+    height: 50px;
+    margin: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+}
+
+.goods img {
+    width: 330px;
+    padding: 5px;
+}
+
+.goods div {
+    width: 400px;
+}
+
+.desc div {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+}
+
+.desc span {
+    width: 175px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    background-color: rgb(173, 173, 173);
+    color: black;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.desc pre {
+    padding: 20px;
+}
