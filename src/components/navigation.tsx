@@ -28,7 +28,7 @@ export default function Navagation() {
                     <Link href="/baseball/goods/all">굿즈</Link>{path.includes("/goods")  ? "⚾" : ""}
                 </li>
                 <li>
-                    <Link href="/baseball/community">커뮤니티</Link>{path.includes("/community")  ? "⚾" : ""}
+                    <Link href="/community">커뮤니티</Link>{path.includes("/community")  ? "⚾" : ""}
                 </li>
             </ul>
         </nav>

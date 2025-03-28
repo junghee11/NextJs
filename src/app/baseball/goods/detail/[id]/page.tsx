@@ -6,7 +6,7 @@ interface IParams {
     params : {id:number}
 }
 
-export default async function GoodsList({params : {id}} : IParams) {
+export default async function GoodsInfo({params : {id}} : IParams) {
     const goods = await getGoodsDetail(id);
 
     const formatNumber = (number) => {
