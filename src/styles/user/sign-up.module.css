@@ -1,0 +1,32 @@
+.container input {
+    background: #000000;
+    border : 1.5px solid #fff;
+    border-radius: 5px;
+    padding: 13px 50px;
+    color: #fff;
+}
+
+.container button {
+    background-color: rgb(107 104 222);
+    border : none;
+    border-radius: 5px;
+    padding: 10px;
+    color: #fff;
+    cursor : pointer;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.checkInfo {
+    margin : 20px;
+}
+
+.checkInfo input {
+    width : 105px;
+}
+
+.checkInfo button {
+    width : 54px;
+    margin-left: 10px;
+}

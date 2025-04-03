@@ -1,7 +1,7 @@
 import Link from "next/link"
 import styles from "../../../styles/user/login.module.css"
 
-export default function FindId(){
+export default function FindPassword(){
     return <div style={{textAlign:'center'}} className={styles.container}>
         <h1 style={{fontSize:'25px', fontWeight:'bold'}}>비밀번호 찾기</h1>
         <br />

@@ -40,9 +40,9 @@ export const getGoodsDetail = async (idx: number) => {
     return await api.get(`/shop/goods/${idx}`);
 }
 
-export const purchaseGoods = async (idx: number, page : number, payType : string) => {
+export const purchaseGoods = async (idx : number, page : number, payType : string) => {
     return await api.post(`/shop/goods`, {
-        id :idx,
+        id : idx,
         count : page,
         payType : payType
     });
