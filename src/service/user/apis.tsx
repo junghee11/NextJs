@@ -108,9 +108,10 @@ export const checkNickname = async ( nickname : string) => {
     return result;
 };
 
-export const sendSmsUserPhone = async ( phone : string, type : string) => {
+export const sendSmsUserPhone = async ( phone : string, name : string, type : string) => {
     const result = await api.post(`/user/phone-sms/verification-code`, {
         phone: phone,
+        name: name,
         type : type
     }).then(response => {
         alert(response.message);
@@ -124,13 +125,45 @@ export const sendSmsUserPhone = async ( phone : string, type : string) => {
     return result;
 };
 
-export const checkUserPhone = async ( phone : string, code : string) => {
+export const checkUserPhone = async ( phone : string, name : string, code : string, type : string) => {
     const result = await api.post(`/user/check/phone`, {
         phone: phone,
-        code : code
+        name: name,
+        code: code,
+        type : type
     }).then(response => {
         alert(response.message);
         return true;
+    })
+    .catch(error => {
+        alert(error.response.data.message);
+        return false;
+    });
+
+    return result;
+};
+
+export const findUserId = async ( name : string, phone : string) => {
+    const result = await api.get(`/user/user-id?name=${name}&phone=${phone}`).then(response => {
+        alert(`회원님의 아이디는 ${response.userId} 입니다.`)
+        window.location.href = "/";
+
+        return response;
+    })
+    .catch(error => {
+        alert(error.response.data.message);
+        return false;
+    });
+
+    return result;
+};
+
+export const findUserPw = async ( userId : string, name : string, phone : string) => {
+    const result = await api.get(`/user/user-pw?userId=${userId}&name=${name}&phone=${phone}`).then(response => {
+        alert(`임시 비밀번호 : ${response.tempPw}\n${response.message}`)
+        window.location.href = "/";
+
+        return response;
     })
     .catch(error => {
         alert(error.response.data.message);

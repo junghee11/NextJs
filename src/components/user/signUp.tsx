@@ -56,8 +56,16 @@ export default function signUp() {
 
     async function clickSendSmsButton (event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
+        if (name == null || name == "") {
+            alert("이름을 입력해주세요")
+            return;
+        } else if (phone == null || phone == "") {
+            alert("휴대폰 번호를 입력해주세요")
+            return;
+        }
+
         try { 
-            const response = sendSmsUserPhone(phone, "SIGN_UP").then(result => {
+            const response = sendSmsUserPhone(phone, name, "SIGN_UP").then(result => {
                 if(result) {
                     setPhoneDisabled(true);
                 }
@@ -69,8 +77,17 @@ export default function signUp() {
 
     async function clickVerificationPhoneButton (event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
+
+        if (!phoneDisabled) {
+            alert("휴대폰번호 인증 요청을 먼저 해주세요")
+            return;
+        } else if (verificationCode == null || verificationCode == "") {
+            alert("인증번호를 입력해주세요")
+            return;
+        } 
+
         try { 
-            const response = checkUserPhone(phone, verificationCode).then(result => {
+            const response = checkUserPhone(phone, name, verificationCode, "SIGN_UP").then(result => {
                 if(result) {
                     setCodeDisabled(true);
                 }
@@ -82,6 +99,26 @@ export default function signUp() {
 
     async function clickSignUpButton (event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
+
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,20}$/;
+
+        if (!codeDisabled) {
+            alert("휴대폰 인증을 해주세요")
+            return;
+        } else if (!idDisabled) {
+            alert("아이디 중복 확인을 해주세요")
+            return;
+        } else if (!nicknameDisabled) {
+            alert("닉네임 중복 확인을 해주세요")
+            return;
+        } else if (password.length < 8 || password.length > 20) {
+            alert("비밀번호는 8~20자 사이여야 합니다.");
+            return;
+        } else if (!regex.test(password)) {
+            alert("비밀번호는 영문, 숫자, 특수문자 조합(공백제외) 8 ~ 20자로 설정해주세요.");
+            return;
+        } 
+
         try { 
             getClientInfo().then((result) => {
                 const country = result.IPv4;
@@ -109,7 +146,7 @@ export default function signUp() {
                 </div>
                 <div className={styles.checkInfo}>
                     <input type="text" 
-                           placeholder="휴대폰 번호('-'를 제외)" 
+                           placeholder="휴대폰 번호('-'제외)" 
                            value={phone} 
                            name="phone"
                            disabled={phoneDisabled}
@@ -207,7 +244,7 @@ export default function signUp() {
                             onChange={(event) => setPassword(event.target.value)}/>
                 </div>
                 <div>
-                    <button type="button" onClick={clickSignUpButton}>
+                    <button type="button" className={styles.lastButton} onClick={clickSignUpButton}>
                         회원가입
                     </button>
                 </div>
