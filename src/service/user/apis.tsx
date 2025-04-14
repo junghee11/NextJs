@@ -174,7 +174,6 @@ export const findUserPw = async ( userId : string, name : string, phone : string
 };
 
 export const resetUserPw = async ( request : RequestCookie, originalPw : string, newPw : string) => {
-    console.log("request = ", request.value);
     if(request != undefined && typeof request.value === "string" && request.value !== ""){
         return await api.post(`/user/user-pw`, {
             originalPw: originalPw,
