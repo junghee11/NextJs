@@ -172,3 +172,45 @@ export const findUserPw = async ( userId : string, name : string, phone : string
 
     return result;
 };
+
+export const resetUserPw = async ( request : RequestCookie, originalPw : string, newPw : string) => {
+    console.log("request = ", request.value);
+    if(request != undefined && typeof request.value === "string" && request.value !== ""){
+        return await api.post(`/user/user-pw`, {
+            originalPw: originalPw,
+            newPw: newPw
+        }, {
+            private: true,
+            headers: {
+                Authorization: `Bearer ${request.value}`
+            }
+        }).then(response => {
+            alert(response.message);
+            return true;
+        })
+        .catch(error => {
+            alert(error.response.data.message);
+            return false;
+        });
+    } else if(getCookie("access_token") != undefined && typeof getCookie("access_token") === "string" && getCookie("access_token") !== ""){
+        return await api.post(`/user/user-pw`, {
+                originalPw: originalPw,
+                newPw: newPw
+            } , {
+            private: true,
+            headers: {
+                Authorization: `Bearer ${request.value}`
+            }
+        }).then(response => {
+            alert(response.message);
+            return true;
+        })
+        .catch(error => {
+            alert(error.response.data.message);
+            return false;
+        });
+    }
+
+    alert(`로그인 후 이용해주세요.`);
+    window.location.href = "/";
+};

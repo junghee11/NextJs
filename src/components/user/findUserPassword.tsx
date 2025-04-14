@@ -25,7 +25,6 @@ export default function findUserPassword() {
 
         try { 
             const response = sendSmsUserPhone(phone, userId, "FIND_PW").then(result => {
-                result
                 if(result) {
                     setPhoneDisabled(true);
                 }

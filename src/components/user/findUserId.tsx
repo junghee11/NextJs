@@ -24,7 +24,6 @@ export default function findId() {
 
         try { 
             const response = sendSmsUserPhone(phone, name, "FIND_ID").then(result => {
-                result
                 if(result) {
                     setPhoneDisabled(true);
                 }

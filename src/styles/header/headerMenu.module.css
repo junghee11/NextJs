@@ -1,0 +1,30 @@
+.nav {
+    position: fixed;
+    width: 90%;
+    margin : 0 auto;
+    top: 7px;
+    padding: 7px 0px;
+    z-index: 10;
+}
+
+.nav ul {
+    display: flex;
+    justify-content: right;
+    gap: 35px;
+}
+
+.nav ul li {
+    list-style: none;
+    transform: none;
+    color : white;
+    font-size: 15px;
+}
+
+.nav button {
+    background: inherit ; 
+    border:none; 
+    padding:0; 
+    color : white;
+    font-size: 15px;
+    line-height: 3px;
+}

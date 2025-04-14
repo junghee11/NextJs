@@ -1,6 +1,6 @@
 "use client"
 
-import {deleteCookie, getCookie} from "cookies-next";
+import {deleteCookie} from "cookies-next";
 import styles from "../../styles/user/login.module.css"
 
 export default function UserInfo(props) {
@@ -8,7 +8,7 @@ export default function UserInfo(props) {
         event.preventDefault();
         deleteCookie("access_token");
         deleteCookie("refresh_token");
-        window.location.reload();
+        window.location.href = "/";
     }
 
     return <div className={styles.container}>

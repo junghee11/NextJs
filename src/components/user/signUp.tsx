@@ -121,8 +121,8 @@ export default function signUp() {
 
         try { 
             getClientInfo().then((result) => {
-                const country = result.IPv4;
-                const ip = result.country_name;
+                const country = result.country_name;
+                const ip = result.IPv4;
                 const response = userSignUp
                     ({userId, password, name, nickname, phone, country, ip});
             });
