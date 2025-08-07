@@ -11,6 +11,16 @@ export default function Login() {
 
     async function clickLoginButton (event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
+
+        if (userId == null || userId == "") {
+            alert("아이디를 입력해주세요")
+            return;
+        } else if (password == null || password == "") {
+            alert("비밀번호를 입력해주세요")
+            return;
+        }
+
+
         try { 
             const response = userLogin(userId, password);
             console.log('로그인 성공:', response);

@@ -32,11 +32,8 @@ class ApiClient {
     private initializeInterceptors() {
         this.client.interceptors.request.use(
             (config: InternalAxiosRequestConfig) => {
-                // const accessToken = getCookie("access_token");
-                // const refreshToken = getCookie("refresh_token");
                 const accessToken = Cookies.get('access_token');
                 const refreshToken = Cookies.get('refresh_token');
-                console.log("accessToken = ", accessToken);
                 
                 if (accessToken) {
                     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -63,29 +60,33 @@ class ApiClient {
               return response;
             },
             (error) => {
-                console.log(error.response.data.message)
                 return Promise.reject(error.response.data);
             }
           );
     }
 
     public async get<T>(url: string, config?: AxiosCustomConfig) {
-        const result = await Axios.get<T>(url, config);
+        const result = await this.client.get<T>(url, config);
         return result.data;
     }
 
     public async post<T>(url: string, body?:any, config?: AxiosCustomConfig) {
-        const result = await Axios.post<T>(url, body, config);
+        const result = await this.client.post<T>(url, body, config);
         return result.data;
     }
 
     public async put<T>(url: string, body?:any, config?: AxiosCustomConfig) {
-        const result = await Axios.put<T>(url, body, config);
+        const result = await this.client.put<T>(url, body, config);
+        return result.data;
+    }
+
+    public async patch<T>(url: string, body?:any, config?: AxiosCustomConfig) {
+        const result = await this.client.patch<T>(url, body, config);
         return result.data;
     }
 
     public async delete<T>(url: string, config?: AxiosCustomConfig) {
-        const result = await Axios.delete<T>(url, config);
+        const result = await this.client.delete<T>(url, config);
         return result.data;
     }
 }
