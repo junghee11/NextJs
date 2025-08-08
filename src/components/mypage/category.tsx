@@ -16,15 +16,14 @@ export default function mypageCategory() {
             </div>
             <div>
                 <div className = {styles.title}>MY 쇼핑</div>
-                <div className={path === "/mypage/goods/cart" ? styles.active : ''}><Link href="/mypage/goods/cart">장바구니</Link></div>
-                <div className={path === "/mypage/goods/like" ? styles.active : ''}><Link href="/mypage/goods/like">찜 목록</Link></div>
-                <div className={path === "/mypage/goods/purchase" ? styles.active : ''}><Link href="/mypage/goods/purchase">구매내역</Link></div>
+                <div className={path === "/mypage/shop/cart" ? styles.active : ''}><Link href="/mypage/goods/cart">장바구니</Link></div>
+                <div className={path === "/mypage/shop/like" ? styles.active : ''}><Link href="/mypage/goods/like">찜 목록</Link></div>
+                <div className={path === "/mypage/shop/purchase" ? styles.active : ''}><Link href="/mypage/goods/purchase">구매내역</Link></div>
             </div>
             <div>
                 <div className = {styles.title}>MY 커뮤니티</div>
                 <div className={path === "/mypage/community/article" ? styles.active : ''}><Link href="/mypage/community/article">내가 작성한 게시글</Link></div>
                 <div className={path === "/mypage/community/comment" ? styles.active : ''}><Link href="/mypage/community/comment">내가 작성한 댓글</Link></div>
-                <div className={path === "/mypage/community/like" ? styles.active : ''}><Link href="/mypage/community/like">좋아요한 게시글</Link></div>
             </div>
             <div>
                 <div className = {styles.title}>회원정보 관리</div>

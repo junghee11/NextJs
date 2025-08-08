@@ -24,7 +24,7 @@ export default async function GoodsList({params : {name}} : IParams) {
         </div>
         <div className={styles.goodsBox}>
             {GoodsList.result.map(goods => <div className={styles.goods} key={goods.idx}>
-                <Link href={"detail/" + goods.idx}>
+                <Link href={"detail/" + goods.goodsCode}>
                     <img src={goods.imgUrl} alt="굿즈" />
                     <p>{goods.team}</p>
                     <h3>{goods.name}</h3>

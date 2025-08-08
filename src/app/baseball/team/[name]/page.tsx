@@ -1,7 +1,6 @@
 import styles from "../../../../styles/baseball/team-info.module.css"
 import { getTeam } from "../../../../service/baseball/apis";
 
-
 interface IParams {
     params : {name:string}
 }

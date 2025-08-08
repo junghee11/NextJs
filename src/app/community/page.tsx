@@ -40,7 +40,8 @@ export default function ArticleList() {
                     <th>카테고리</th>
                     <th>제목</th>
                     <th>작성자</th>
-                    <th>조회수</th>
+                    <th>조회</th>
+                    <th>댓글</th>
                     <th>작성일</th>
                 </tr>
             </thead>

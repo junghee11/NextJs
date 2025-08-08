@@ -10,10 +10,13 @@ export default async function MyPage() {
     const access_token = cookieStore.get("access_token");
     const userInfo = await getUserInfo(access_token);
 
+    const imgUrl = userInfo.result.profile_img_url ? 
+    userInfo.result.profileImgUrl : "tmp/profile/img_profile.png";
+
     return <div className = {styles.container}>
         <Category></Category>
         <div className = {styles.content}>
-            <img src={"/images/" + userInfo.result.profile_img_url} alt="profile"/>
+            <img src={"/images/" + imgUrl} alt="profile"/>
             <p>팀을 응원해주세요 ❤</p>
             <p>닉네임 : {userInfo.result.nickname}</p>
             <p>아이디 : {userInfo.result.userId}</p>

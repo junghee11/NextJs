@@ -39,13 +39,8 @@ class ApiClient {
                     config.headers.Authorization = `Bearer ${accessToken}`;
                     return config;
                 } else if (refreshToken) {
-                    // const body = {
-                    //   type: "refresh",
-                    // };
-
                     config.headers.Authorization = `Bearer ${refreshToken}`;
                     config.params.type = "refresh";
-
                     return config;
                 }
                 return config;
