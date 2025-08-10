@@ -43,3 +43,19 @@ export const getMyArticleListServer = async () => {
 export const getMyCommentListServer = async () => {
     return await serverApi.get(`/mypage/comment`);
 } 
+
+export const getMyCartListServer = async () => {
+    return await serverApi.get(`/mypage/shop/cart`);
+} 
+
+export const getMyWishListServer = async () => {
+    return await serverApi.get(`/mypage/shop/wish`);
+} 
+
+export const getMyPurchaseListServer = async () => {
+    return await serverApi.get(`/mypage/shop/purchase`);
+} 
+
+export const getMyReceiptDetailServer = async (receiptId : string) => {
+    return await serverApi.get(`/mypage/shop/purchase/${receiptId}`);
+} 

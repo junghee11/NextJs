@@ -2,6 +2,7 @@ import styles from "../../../../styles/mypage/mypage.module.css"
 import { getMyCommentListServer } from "../../../../service/mypage/serverApis";
 import Category from "../../../../components/mypage/category";
 import { elapsedTime } from "../../../../utils/function/date";
+import Link from "next/link";
 
 export default async function MyCommentList() {
     const commentList = await getMyCommentListServer();
@@ -19,10 +20,12 @@ export default async function MyCommentList() {
         <Category></Category>
         <div>
             {commentList.result.map((comment: any) => 
-                <div key={comment.idx}>
-                    <span>{comment.content}</span>
-                    <span>{elapsedTime(comment.createdAt)}</span>
-                </div>)}
+                <Link href={"/community/" + comment.articleIdx}>
+                    <div key={comment.idx}>
+                        <span>{comment.content}</span>
+                        <span>{elapsedTime(comment.createdAt)}</span>
+                    </div>
+                </Link>)}
         </div>
     </div>;
 }

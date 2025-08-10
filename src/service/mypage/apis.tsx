@@ -1,6 +1,5 @@
 import { TeamCode } from "../../types/baseball/team";
 import api from "../ApiClient"
-import serverApi from "../ServerApiClient"
 
 export const dynamic = 'force-dynamic';
 
@@ -43,4 +42,15 @@ export const getMyArticleList = async () => {
 
 export const getMyCommentList = async () => {
     return await api.get(`/mypage/comment`);
+}
+
+export const leaveSite = async () => {
+    return await api.post(`/user/leave`).then(response => {
+        console.log("response");
+        console.log(response);
+        return response;
+    })
+    .catch(error => {
+        return error.response.data.message;
+    });    
 }

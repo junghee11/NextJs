@@ -16,9 +16,9 @@ export default function mypageCategory() {
             </div>
             <div>
                 <div className = {styles.title}>MY 쇼핑</div>
-                <div className={path === "/mypage/shop/cart" ? styles.active : ''}><Link href="/mypage/goods/cart">장바구니</Link></div>
-                <div className={path === "/mypage/shop/like" ? styles.active : ''}><Link href="/mypage/goods/like">찜 목록</Link></div>
-                <div className={path === "/mypage/shop/purchase" ? styles.active : ''}><Link href="/mypage/goods/purchase">구매내역</Link></div>
+                <div className={path === "/mypage/goods/cart" ? styles.active : ''}><Link href="/mypage/goods/cart">장바구니</Link></div>
+                <div className={path === "/mypage/goods/wish" ? styles.active : ''}><Link href="/mypage/goods/wish">찜 목록</Link></div>
+                <div className={path === "/mypage/goods/receipt" ? styles.active : ''}><Link href="/mypage/goods/receipt">구매내역</Link></div>
             </div>
             <div>
                 <div className = {styles.title}>MY 커뮤니티</div>
