@@ -2,7 +2,7 @@
 
 import { getUserInfo } from "../../../service/user/apis";
 import { getArticle, getCommentList, addComment, toggleComment } from "../../../service/community/apis";
-import styles from "../../../styles/baseball/article.module.css"
+import styles from "../../../styles/article/article.module.css"
 import { elapsedTime } from "../../../utils/function/date";
 import DeleteArticleButton from "../../../components/article/deleteArticleButton";
 import DeleteCommentButton from "../../../components/article/deleteCommentButton";
@@ -94,11 +94,11 @@ export default function Article({ params: { id } }: IParams) {
     }, [id]);
 
     if (loading) {
-        return <div className={styles.container}><div style={{textAlign: "center"}}>로딩 중...</div></div>;
+        return <div className={styles.container}><div className={styles.loading}>로딩 중...</div></div>;
     }
 
     if (!article) {
-        return <div className={styles.container}><div style={{textAlign: "center"}}>게시글을 찾을 수 없습니다.</div></div>;
+        return <div className={styles.container}><div className={styles.error}>게시글을 찾을 수 없습니다.</div></div>;
     }
 
     return <div className={styles.container}>
@@ -122,64 +122,56 @@ export default function Article({ params: { id } }: IParams) {
                 <p>{article.result.content}</p>
             </div>
         </div>
-        <hr />
         {userInfo && userInfo.result.userId == article.result.userId &&
-            <div>
-                <button><a href={"update/" + article.result.idx}>수정</a></button>
+            <div className={styles.actionButtons}>
+                <a href={"update/" + article.result.idx}>수정</a>
                 <DeleteArticleButton articleId={article.result.idx} />
             </div>
         }
-        <div>
-            <form onSubmit={handleCommentSubmit} style={{ margin: "20px 0" }}>
+        <div className={styles.commentSection}>
+            <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
                 <textarea
                     value={commentInput}
                     onChange={e => setCommentInput(e.target.value)}
                     placeholder={!userInfo ? "로그인 후 이용 가능합니다" : "댓글을 입력하세요"}
                     rows={3}
-                    style={{ width: "100%", resize: "vertical" }}
                     disabled={!userInfo}
                 />
-                <button type="submit" style={{ marginTop: "8px" }} disabled={!userInfo}>
+                <button type="submit" disabled={!userInfo}>
                     등록
                 </button>
             </form>
         </div>
         <div>
             {comments && comments.result.map((comment: any) => 
-                <div key={comment.idx}>
-                    <div>
-                        <span><img src={comment.profile == null ? "/images/tmp/profile/img_profile.png" : comment.profile} alt="" /></span>
-                        <span>{comment.nickname}</span>
-                        <span>{elapsedTime(comment.createdAt)}</span>
-                    </div>
-                    <div>{comment.content}</div>
-                    <div>
-                        {/* <span>댓글쓰기</span>
-                        <span>댓글 {comment.commentCount}</span> */}
-                        <span>
+                <div key={comment.idx} className={styles.commentItem}>
+                    <div className={styles.commentTitle}>
+                        <div className={styles.userBox}>
+                            <span><img src={comment.profile == null ? "/images/tmp/profile/img_profile.png" : comment.profile} alt="" /></span>
+                            <span>{comment.nickname}</span>
+                            <span>{elapsedTime(comment.createdAt)}</span>
+                        </div>
+                        <div className={styles.buttonBox}>
                             <LoginRequiredButton 
                                 onClick={() => handleCommentToggle(comment.idx, 'UP')}
-                                style={{ marginRight: '10px' }}
                             >
-                                👍 추천  {comment.up}
+                                👍 추천 {comment.up}
                             </LoginRequiredButton>
-                        </span>
-                        <span>
                             <LoginRequiredButton 
                                 onClick={() => handleCommentToggle(comment.idx, 'DOWN')}
-                                style={{ marginRight: '10px' }}
                             >
-                                👎 비추천  {comment.down}
+                                👎 비추천 {comment.down}
                             </LoginRequiredButton>
-                        </span>
-                        
-                        {userInfo && comment.userId == userInfo.result.userId &&
-                        <DeleteCommentButton 
-                            commentId={comment.idx} 
-                            onCommentDeleted={refreshComments}
-                        />
-                        }
+                            
+                            {userInfo && comment.userId == userInfo.result.userId &&
+                            <DeleteCommentButton 
+                                commentId={comment.idx} 
+                                onCommentDeleted={refreshComments}
+                            />
+                            }
+                        </div>
                     </div>
+                    <div className={styles.commentContent}>{comment.content}</div>
                 </div>)}
         </div>
     </div>;

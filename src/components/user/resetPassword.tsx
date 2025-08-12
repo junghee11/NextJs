@@ -26,7 +26,7 @@ export default function resetPassword({accessToken}) {
             alert("비밀번호는 영문, 숫자, 특수문자 조합(공백제외) 8 ~ 20자로 설정해주세요");
             return;
         } else if (originalPw == newPw) {
-            alert("새 비밀번호는 기존과 다르게 설정해주세요");
+            alert("기존 비밀번호를 올바르게 입력하셨는지 확인해주세요. 새 비밀번호는 기존과 달라야합니다");
             return;
         } 
 

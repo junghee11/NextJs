@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link";
-import styles from "../../styles/baseball/article.module.css"
+import styles from "../../styles/article/article.module.css"
 import { getArticleList } from "../../service/community/apis";
 import { useState, useEffect } from "react";
+import { elapsedTime } from "../../utils/function/date";
 
 export default function ArticleList() {
     const [articleList, setArticleList] = useState<any>(null);
@@ -34,30 +35,33 @@ export default function ArticleList() {
     }
 
     return <div className={styles.container}>
-        <table>
-            <thead>
-                <tr>
-                    <th>카테고리</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>조회</th>
-                    <th>댓글</th>
-                    <th>작성일</th>
-                </tr>
-            </thead>
-            <tbody>
-                {articleList.result.map((article: any) => 
-                <tr key={article.idx}>
-                    <td>{article.category}</td>
-                    <td><Link href={"/community/" + article.idx}>{article.title} </Link></td>
-                    <td>{article.userId}</td>
-                    <td>{article.viewCount}</td>
-                    <td>{article.commentCount}</td>
-                    <td>{article.createdAt}</td>                        
-                </tr>)}
-            </tbody>
-        </table>
-        <Link href="/community/post">글쓰기</Link>
+        <div>
+
+            {articleList.result.map((article: any) => 
+                <div key={article.idx} className={styles.articleListBox}>
+                    
+                    <div className={styles.userBox}>
+                        <span><img src="/images/tmp/profile/img_profile.png" alt="" /></span>
+                        <span>{article.nickname}</span>
+                        <span>{elapsedTime(article.createdAt)}</span>
+                    </div>
+                    <div className={styles.articleInfoBox}>
+                        <div className={styles.category}>
+                            <span>{article.category}</span>
+                        </div>
+                        <div className={styles.title}>
+                            <Link href={"/community/" + article.idx}><p>{article.title} </p></Link>
+                        </div>
+                        <div className={styles.articleCount}>
+                            <span>👀 {article.viewCount}</span>
+                            <span>💬 {article.commentCount}</span>
+                        </div>
+                    </div>
+                </div>)}
+        </div>
+        <div className={styles.articleButton}>
+            <Link href="/community/post">글쓰기</Link>
+        </div>
     </div>
     ;
 }

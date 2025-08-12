@@ -1,6 +1,6 @@
 "use client"
 
-import styles from "../../styles/baseball/article.module.css"
+import styles from "../../styles/article/article.module.css"
 import { postArticle } from "../../service/community/apis";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -41,16 +41,19 @@ export default function PostArticle() {
         }
     }
 
-    return <div className={styles.container}>
+    return <div className={styles.formContainer}>
+        <h1 className={styles.formTitle}>글 작성하기</h1>
         <form name="postArticle">
-            <div>
-                <label htmlFor="category">
-                    카테고리
+            <div className={styles.formGroup}>
+                <label htmlFor="category" className={styles.formLabel}>
+                    카테고리 <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <select 
                     id="category" 
                     name="category"
+                    className={styles.formSelect}
                     onChange={(e) => setCategory(e.target.value)}
+                    value={category}
                 >
                     <option value="">카테고리를 선택하세요</option>
                     <option value="NOTICE">공지</option>
@@ -58,22 +61,51 @@ export default function PostArticle() {
                     <option value="GOODS">굿즈</option>
                 </select>
             </div>
-            <div>
-                <label htmlFor="title">제목 : </label>
-                <input type="text" 
+            <div className={styles.formGroup}>
+                <label htmlFor="title" className={styles.formLabel}>
+                    제목 <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <input 
+                    type="text" 
                     id="title"
+                    className={styles.formInput}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    required />
+                    placeholder="제목을 입력하세요"
+                    required 
+                />
             </div>
-            <div>
-                <textarea id="content"
+            <div className={styles.formGroup}>
+                <label htmlFor="content" className={styles.formLabel}>
+                    내용 <span style={{ color: '#ef4444' }}>*</span>
+                </label>
+                <textarea 
+                    id="content"
+                    className={styles.formTextarea}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    required>
-                </textarea>
+                    placeholder="게시글 내용을 입력하세요 (최소 10자 이상)"
+                    required
+                />
+                <div className={`${styles.characterCount} ${
+                    content.length < 10 ? styles.error : 
+                    content.length < 20 ? styles.warning : ''
+                }`}>
+                    {content.length}/10 (최소 글자수)
+                </div>
             </div>
-            <button type="submit" onClick={clickPostButton}>등록</button>
+            <div className={styles.buttonGroup}>
+                <a href="/community" className={styles.cancelButton}>
+                    취소
+                </a>
+                <button 
+                    type="submit" 
+                    className={styles.submitButton} 
+                    onClick={clickPostButton}
+                >
+                    등록
+                </button>
+            </div>
         </form>
     </div>;
 }
