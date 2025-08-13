@@ -28,7 +28,7 @@ export const postArticle = async (category : string, title: string, content : st
             return response;
         })
         .catch(error => {
-            return error.response.data.message;
+            return error;
         });
     
     return result;
@@ -43,7 +43,7 @@ export const updateArticle = async (id : number, title: string, content : string
             return response;
         })
         .catch(error => {
-            return error.response.data.message;
+            return error;
         });
     
     return result;
@@ -68,7 +68,7 @@ export const addComment = async (articleId : number, content : string) => {
             return response;
         })
         .catch(error => {
-            return error.response.data.message;
+            return error;
         });
     
     return result;

@@ -38,26 +38,31 @@ export default function resetPassword({accessToken}) {
     }
     
     return <div className = {styles.container}>
+        <h2>※ 비밀번호 변경하기</h2>
         <form action="post" name="findPassword">
-                <div style={{margin : '20px 0'}}>
-                    <input type="password"  
-                            placeholder="기존 비밀번호" 
-                            value={originalPw} 
-                            name="originalPw"
-                            onChange={(event) => setOriginalPw(event.target.value)}/>
-                </div>
-                <div style={{margin : '20px 0'}}>
-                    <input type="password"  
-                           placeholder="새 비밀번호" 
-                           value={newPw} 
-                           name="newPw"
-                           onChange={(event) => setNewPw(event.target.value)}/>
-                </div>
-                <div>
-                    <button type="button" className={styles.lastButton} onClick={clickResetPwButton}>
-                        비밀번호 변경
-                    </button>
-                </div>
-            </form>
+            <div style={{margin : '20px 0'}}>
+                <label htmlFor="originalPw">기존 비밀번호 </label>
+                <input id="originalPw"
+                        type="password"  
+                        placeholder="기존 비밀번호" 
+                        value={originalPw} 
+                        name="originalPw"
+                        onChange={(event) => setOriginalPw(event.target.value)}/>
+            </div>
+            <div style={{margin : '20px 0'}}>
+                <label htmlFor="originalPw">새 비밀번호 </label>
+                <input id="newPw"
+                        type="password"  
+                        placeholder="새 비밀번호" 
+                        value={newPw} 
+                        name="newPw"
+                        onChange={(event) => setNewPw(event.target.value)}/>
+            </div>
+            <div>
+                <button type="button" className={styles.lastButton} onClick={clickResetPwButton}>
+                    변경
+                </button>
+            </div>
+        </form>
     </div>;
 }

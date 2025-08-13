@@ -1,39 +1,671 @@
 .container {
-    width: 60%;
+    max-width: 1200px;
     display: flex;
-    margin : 0 auto;
+    margin: 0 auto 100px;
+    gap: 24px;
+    padding: 0 20px;
+    min-height: 600px;
 }
 
 .container img {
-    width: 100px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #374151;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
 }
 
 .container p {
-    margin: 30px 0;
+    margin: 16px 0;
+    color: #e5e7eb;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 .category {
-    width: 167px;
-    border: 2px solid #2d2d2d;
-    border-radius: 10px;   
-    font-size: 15px;
+    min-width: 280px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 12px;
+    font-size: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    height: 723px;
 }
 
 .category div div {
-    padding : 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #374151;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    color: #d1d5db;
 }
 
-.active{
-    background-color : rgb(107 104 222);
-    font-weight: bold;
+.category div div:last-child {
+    border-bottom: none;
+}
+
+.category div div:hover {
+    background: #374151;
+    color: #3b82f6;
+}
+
+.category div div a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    font-weight: 500;
+}
+
+.active {
+    background: #3b82f6 !important;
+    color: white !important;
+    font-weight: 600;
+    position: relative;
+}
+
+.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #1d4ed8;
+}
+
+.active:hover {
+    background: #2563eb !important;
+    color: white !important;
 }
 
 .title {
-    background-color: #2d2d2d;
-    margin : 0;
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+    color: white;
+    margin: 0;
+    padding: 16px 20px !important;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #4b5563 !important;
+}
+
+.title:hover{
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%) !important ;
+    color : white !important;
+    cursor : default;
 }
 
 .content {
-    width: 75%;
-    margin: 30px 50px;
+    flex: 1;
+    padding: 32px;
+    background: #1f2937;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.content h2 {
+    color: #f3f4f6;
+    margin-bottom: 16px;
+}
+
+/* 프로필 정보 스타일 */
+.profileSection {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: rgba(55, 65, 81, 0.3);
+    border: 1px solid #374151;
+    border-radius: 16px;
+}
+
+.profileSection h2 {
+    color: #f3f4f6;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.infoCard {
+    background: #374151;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #4b5563;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.infoCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-color: #3b82f6;
+}
+
+.infoCard strong {
+    color: #f3f4f6;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.infoCard span {
+    color: #d1d5db;
+    font-size: 15px;
+}
+
+/* 테이블 스타일 */
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+    background: #374151;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dataTable thead {
+    background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+}
+
+.dataTable thead th {
+    color: white;
+    padding: 16px 20px;
+    font-weight: 600;
+    text-align: left;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.dataTable tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.dataTable tbody tr:hover {
+    background: #f8fafc;
+}
+
+.dataTable tbody tr:hover td {
+    color: black;
+}
+
+.dataTable tbody tr:last-child {
+    border-bottom: none;
+}
+
+.dataTable tbody td {
+    padding: 16px 20px;
+    color: #e8e8e8;
+    font-size: 14px;
+}
+
+
+.dataTable tbody td a {
+    color: #e8e8e8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.dataTable tbody td a:hover {
+    color: black;
+    font-weight: bold;
+}
+
+.dataTable img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+}
+
+/* 장바구니/상품 카드 스타일 */
+.productCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #e5e7eb;
+}
+
+.productCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-color: #3b82f6;
+}
+
+.productCard img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+}
+
+.productInfo {
+    flex: 1;
+}
+
+.productInfo h3 {
+    color: #f3f4f6;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.productInfo .price {
+    color: #3b82f6;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.productInfo .quantity {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* 빈 상태 스타일 */
+.emptyState {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+.emptyState .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.emptyState h3 {
+    color: #f3f4f6;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.emptyState p {
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.emptyState .actionButton {
+    background: #3b82f6;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.emptyState .actionButton:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* 위험한 액션 버튼 */
+.dangerButton {
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 24px;
+}
+
+.dangerButton:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.dangerButton a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 0 16px;
+        gap: 16px;
+    }
+    
+    .category {
+        min-width: unset;
+        width: 100%;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .infoGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dataTable {
+        font-size: 12px;
+    }
+    
+    .dataTable thead th,
+    .dataTable tbody td {
+        padding: 12px 8px;
+    }
+    
+    .productCard {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .productCard img {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* 팀 선택 컴포넌트 스타일 */
+.teamSelector {
+    background: rgba(55, 65, 81, 0.5);
+    border: 1px solid #4b5563;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.teamSelectorTitle {
+    color: #f3f4f6;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.teamSelectorTitle::before {
+    content: '⚾';
+    font-size: 20px;
+}
+
+.teamSelectGroup {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.teamSelectLabel {
+    color: #d1d5db;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.teamSelect {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 16px;
+    border: 1px solid #4b5563;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #f3f4f6;
+    background-color: #374151;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23d1d5db' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.teamSelect:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.teamSelectButton {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.teamSelectButton:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.teamSelectButton:active {
+    transform: translateY(0);
+}
+
+/* 팀 정보 카드 스타일 */
+.teamInfoCard {
+    background: rgba(55, 65, 81, 0.5);
+    border: 2px solid #4b5563;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.teamInfoCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border-color: #3b82f6;
+}
+
+.teamInfoCard img {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50%;
+    border: 4px solid #374151;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+}
+
+.teamInfoCard h3 {
+    color: #f3f4f6;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.teamInfoCard .teamRank {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.stadiumBox img {
+    border-radius: 0px;
+}
+
+/* 주문/결제 카드 스타일 */
+.orderCard {
+    background: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #e5e7eb;
+    display: block;
+}
+
+.orderCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-color: #3b82f6;
+    color: #e5e7eb;
+}
+
+.orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #4b5563;
+}
+
+.orderDate {
+    color: #d1d5db;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.orderStatus {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.orderStatus.completed {
+    background: #065f46;
+    color: #d1fae5;
+}
+
+.orderStatus.cancelled {
+    background: #7f1d1d;
+    color: #fecaca;
+}
+
+.orderInfo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.orderDetail {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderDetail strong {
+    color: #f3f4f6;
+    font-size: 12px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.orderDetail span {
+    color: #d1d5db;
+    font-size: 14px;
+}
+
+.orderPrice {
+    color: #3b82f6 !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+}
+
+/* 댓글 카드 스타일 */
+.commentCard {
+    background: #374151;
+    border: 1px solid #4b5563;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #e5e7eb;
+    display: block;
+}
+
+.commentCard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-color: #3b82f6;
+    color: #e5e7eb;
+}
+
+.commentContent {
+    color: #f3f4f6;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.commentMeta {
+    color: #9ca3af;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.commentMeta::before {
+    content: '💬';
+    font-size: 14px;
+}
+
+/* 반응형 - 팀 선택 */
+@media (max-width: 768px) {
+    .teamSelectGroup {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .teamSelect {
+        min-width: unset;
+    }
+    
+    .teamSelectButton {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .orderInfo {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
 }

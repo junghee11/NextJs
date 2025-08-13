@@ -10,22 +10,35 @@ export default async function MyCommentList() {
     if (commentList.result.length == 0) {
         return <div className = {styles.container}>
             <Category></Category>
-            <div>
-                <p>작성한 댓글이 없습니다</p>
+            <div className = {styles.content}>
+                <div className={styles.emptyState}>
+                    <div className={styles.icon}>💬</div>
+                    <h3>작성한 댓글이 없습니다</h3>
+                    <p>게시글에 첫 번째 댓글을 달아보세요!</p>
+                    <a href="/community" className={styles.actionButton}>
+                        커뮤니티 둘러보기
+                    </a>
+                </div>
             </div>
         </div>
     }
 
     return <div className = {styles.container}>
         <Category></Category>
-        <div>
-            {commentList.result.map((comment: any) => 
-                <Link href={"/community/" + comment.articleIdx}>
-                    <div key={comment.idx}>
-                        <span>{comment.content}</span>
-                        <span>{elapsedTime(comment.createdAt)}</span>
-                    </div>
-                </Link>)}
+        <div className = {styles.content}>
+            <h2>내가 작성한 댓글</h2>
+            <div>
+                {commentList.result.map((comment: any) => 
+                    <Link key={comment.idx} href={"/community/" + comment.articleIdx} className={styles.commentCard}>
+                        <div className={styles.commentContent}>
+                            {comment.content}
+                        </div>
+                        <div className={styles.commentMeta}>
+                            {elapsedTime(comment.createdAt)}
+                        </div>
+                    </Link>
+                )}
+            </div>
         </div>
     </div>;
 }

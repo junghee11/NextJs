@@ -9,8 +9,15 @@ export default async function MyWishList() {
     if (wishList.result.length == 0) {
         return <div className = {styles.container}>
             <Category></Category>
-            <div>
-                <p>찜한 상품이 없습니다</p>
+            <div className = {styles.content}>
+                <div className={styles.emptyState}>
+                    <div className={styles.icon}>💖</div>
+                    <h3>찜한 상품이 없습니다</h3>
+                    <p>마음에 드는 상품을 찜해보세요!</p>
+                    <a href="/baseball/goods" className={styles.actionButton}>
+                        상품 둘러보기
+                    </a>
+                </div>
             </div>
         </div>
     }
@@ -18,19 +25,18 @@ export default async function MyWishList() {
     return <div className = {styles.container}>
         <Category></Category>
         <div className = {styles.content}>
-            <table>
-                <thead></thead>
-                <tbody>
-                    {wishList.result.map((wish: any) => <tr key={wish.goodsCode}>
-                        <Link href={"/baseball/goods/detail/" + wish.goodsCode}>
-                            <td><img src={wish.imgUrl} alt="" /></td>
-                            <td>{wish.name} </td>
-                            <td>상품금액<br/>{wish.price}</td>                        
-                            <td>수량<br/>{wish.count}</td>   
-                        </Link>                     
-                    </tr>)}
-                </tbody>
-            </table>           
+            <h2>찜 목록</h2>
+            <div>
+                {wishList.result.map((wish: any) => 
+                    <Link key={wish.goodsCode} href={"/baseball/goods/detail/" + wish.goodsCode} className={styles.productCard}>
+                        <img src={wish.imgUrl} alt={wish.name} />
+                        <div className={styles.productInfo}>
+                            <h3>{wish.name}</h3>
+                            <div className={styles.price}>{wish.price.toLocaleString()}원</div>
+                        </div>
+                    </Link>
+                )}
+            </div>          
         </div>
     </div>;
 }

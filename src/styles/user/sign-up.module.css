@@ -6,6 +6,11 @@
     color: #fff;
 }
 
+.container label {
+    display: block;
+    margin: 10px;
+}
+
 .container button {
     background-color: rgb(107 104 222);
     border : none;

@@ -1,3 +1,5 @@
 export default function Loading() {
-    return <h2>Loading...</h2>;
+    return <div style={{width: '100%', height : '100%'}}>
+        <h2 style={{margin: '150px auto', textAlign: 'center'}}>Loading...</h2>;
+    </div>
 }
