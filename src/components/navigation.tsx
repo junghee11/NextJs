@@ -16,7 +16,7 @@ export default function Navagation() {
                     <Link href="/baseball/schedule/all">경기일정</Link>{path.includes("/schedule")  ? "⚾" : ""}
                 </li>
                 <li>
-                    <Link href="/baseball/team/all">팀정보</Link>{path.includes("/team")  ? "⚾" : ""}
+                    <Link href="/baseball/team/all">순위</Link>{path.includes("/team")  ? "⚾" : ""}
                 </li>
                 <li>
                     <Link href="/baseball/stadium/all">경기장</Link>{path.includes("/stadium")  ? "⚾" : ""}

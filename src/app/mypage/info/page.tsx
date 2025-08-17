@@ -4,7 +4,7 @@ import styles from "../../../styles/mypage/mypage.module.css"
 import { getUserInfo } from "../../../service/user/apis";
 import Category from "../../../components/mypage/category";
 import ResetPassword from "../../../components/user/resetPassword";
-import LoginRequiredButton from "../../../components/common/LoginRequiredButton";
+import ProfileImageUpload from "../../../components/mypage/ProfileImageUpload";
 import LoginPopup from "../../../components/common/LoginPopup";
 
 export default async function MyPage() {
@@ -16,14 +16,16 @@ export default async function MyPage() {
         return <LoginPopup></LoginPopup>
     }
 
-    const imgUrl = userInfo.result.profile_img_url ? 
-    userInfo.result.profileImgUrl : "tmp/profile/img_profile.png";
+    const imgUrl = process.env.NEXT_PUBLIC_AWS_IMAGE_URL;
+    const userImg = userInfo.result.profileImgUrl ? 
+    imgUrl + userInfo.result.profileImgUrl : "/images/tmp/profile/img_profile.png";
 
     return <div className = {styles.container}>
         <Category></Category>
         <div className = {styles.content}>
             <div className={styles.profileSection}>
-                <img src={"/images/" + imgUrl} alt="profile"/>
+                <ProfileImageUpload currentImageUrl = {userImg}></ProfileImageUpload>
+                {/* <img src={userImg} alt="profile"/> */}
                 <h2>{userInfo.result.nickname}</h2>
                 
                 <div className={styles.infoGrid}>

@@ -46,11 +46,22 @@ export const getMyCommentList = async () => {
 
 export const leaveSite = async () => {
     return await api.post(`/user/leave`).then(response => {
-        console.log("response");
-        console.log(response);
         return response;
     })
     .catch(error => {
         return error.response.data.message;
     });    
+}
+
+export const changeProfileImage = async (profileImage : FormData) => {
+    return await api.post(`/mypage/profile/image`, profileImage, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(response => {
+        return response;
+    })
+    .catch(error => {
+        return error;
+    })
 }

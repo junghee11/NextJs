@@ -22,7 +22,7 @@ export default async function BaseBallMatchSchedule({params : {name}} : IParams)
             <TeamSelector selectedTeam={name} />
         </div>
         <Match 
-            team="all" 
+            team={name}
         ></Match>
     </div>;
 }
