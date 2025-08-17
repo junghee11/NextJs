@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { changeProfileImage } from '../../service/mypage/apis';
+import { imageUrlFormat } from "../../utils/stringFormat/image";
 
 interface ProfileImageUploadProps {
     currentImageUrl: string;
@@ -24,13 +25,11 @@ export default function ProfileImageUpload({
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // 파일 크기 검증 (5MB 제한)
         if (file.size > 5 * 1024 * 1024) {
             alert('파일 크기는 5MB 이하로 업로드해주세요.');
             return;
         }
 
-        // 파일 형식 검증
         if (!file.type.startsWith('image/')) {
             alert('이미지 파일만 업로드 가능합니다.');
             return;
@@ -44,14 +43,11 @@ export default function ProfileImageUpload({
 
             const response = await changeProfileImage(formData);
             
-            if (response.message) {
-                const newImageUrl = response.imageUrl;
-                if (newImageUrl) {
-                    const fullImageUrl = process.env.NEXT_PUBLIC_AWS_IMAGE_URL + newImageUrl;
-                    setImageUrl(fullImageUrl);
-                    onImageChange?.(fullImageUrl);
-                    alert('프로필 이미지가 변경되었습니다.');
-                }
+            if (response.message && response.imageUrl) {
+                const newImageUrl = imageUrlFormat(response.imageUrl);
+                setImageUrl(newImageUrl);
+                onImageChange?.(newImageUrl);
+                alert('프로필 이미지가 변경되었습니다.');
             } else {
                 alert('이미지 업로드에 실패했습니다.');
             }

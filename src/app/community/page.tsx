@@ -4,7 +4,8 @@ import Link from "next/link";
 import styles from "../../styles/article/article.module.css"
 import { getArticleList } from "../../service/community/apis";
 import { useState, useEffect } from "react";
-import { elapsedTime } from "../../utils/function/date";
+import { elapsedTime } from "../../utils/stringFormat/date";
+import { imageUrlFormat } from "../../utils/stringFormat/image";
 
 export default function ArticleList() {
     const [articleList, setArticleList] = useState<any>(null);
@@ -41,7 +42,9 @@ export default function ArticleList() {
                 <div key={article.idx} className={styles.articleListBox}>
                     
                     <div className={styles.userBox}>
-                        <span><img src="/images/tmp/profile/img_profile.png" alt="" /></span>
+                        <span>
+                            <img src={imageUrlFormat(article.profileImgUrl)}/>
+                        </span>
                         <span>{article.nickname}</span>
                         <span>{elapsedTime(article.createdAt)}</span>
                     </div>

@@ -1,7 +1,7 @@
 import styles from "../../../../styles/mypage/mypage.module.css"
 import { getMyCommentListServer } from "../../../../service/mypage/serverApis";
 import Category from "../../../../components/mypage/category";
-import { elapsedTime } from "../../../../utils/function/date";
+import { elapsedTime } from "../../../../utils/stringFormat/date";
 import Link from "next/link";
 
 export default async function MyCommentList() {

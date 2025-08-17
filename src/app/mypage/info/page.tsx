@@ -6,6 +6,7 @@ import Category from "../../../components/mypage/category";
 import ResetPassword from "../../../components/user/resetPassword";
 import ProfileImageUpload from "../../../components/mypage/ProfileImageUpload";
 import LoginPopup from "../../../components/common/LoginPopup";
+import { imageUrlFormat } from "../../../utils/stringFormat/image";
 
 export default async function MyPage() {
     const cookieStore = cookies();
@@ -16,15 +17,11 @@ export default async function MyPage() {
         return <LoginPopup></LoginPopup>
     }
 
-    const imgUrl = process.env.NEXT_PUBLIC_AWS_IMAGE_URL;
-    const userImg = userInfo.result.profileImgUrl ? 
-    imgUrl + userInfo.result.profileImgUrl : "/images/tmp/profile/img_profile.png";
-
     return <div className = {styles.container}>
         <Category></Category>
         <div className = {styles.content}>
             <div className={styles.profileSection}>
-                <ProfileImageUpload currentImageUrl = {userImg}></ProfileImageUpload>
+                <ProfileImageUpload currentImageUrl = {imageUrlFormat(userInfo.result.profileImgUrl)}></ProfileImageUpload>
                 {/* <img src={userImg} alt="profile"/> */}
                 <h2>{userInfo.result.nickname}</h2>
                 

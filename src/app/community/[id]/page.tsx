@@ -3,7 +3,8 @@
 import { getUserInfo } from "../../../service/user/apis";
 import { getArticle, getCommentList, addComment, toggleComment } from "../../../service/community/apis";
 import styles from "../../../styles/article/article.module.css"
-import { elapsedTime } from "../../../utils/function/date";
+import { elapsedTime } from "../../../utils/stringFormat/date";
+import { imageUrlFormat } from "../../../utils/stringFormat/image";
 import DeleteArticleButton from "../../../components/article/deleteArticleButton";
 import DeleteCommentButton from "../../../components/article/deleteCommentButton";
 import LoginRequiredButton from "../../../components/common/LoginRequiredButton";
@@ -73,7 +74,6 @@ export default function Article({ params: { id } }: IParams) {
                 setLoading(true);
                 const access_token = Cookies.get("access_token");
                 
-                // 병렬로 데이터 로딩
                 const [userData, articleData, commentsData] = await Promise.all([
                     getUserInfo(access_token),
                     getArticle(id),
@@ -108,7 +108,9 @@ export default function Article({ params: { id } }: IParams) {
                     <strong>커뮤니티 {"> "} {article.result.category}</strong> 
                 </div>
                 <p>
-                    <strong><img src={article.result.imgCard} alt="profile" /></strong> {article.result.nickname}
+                    <strong>
+                        <img src={imageUrlFormat(article.profileImgUrl)} alt="profile" />
+                    </strong> {article.result.nickname}
                     <strong> • </strong>{" "}
                     {elapsedTime(article.result.createdAt)}
                     <strong> 👀 </strong>{" "}
@@ -147,7 +149,7 @@ export default function Article({ params: { id } }: IParams) {
                 <div key={comment.idx} className={styles.commentItem}>
                     <div className={styles.commentTitle}>
                         <div className={styles.userBox}>
-                            <span><img src={comment.profile == null ? "/images/tmp/profile/img_profile.png" : comment.profile} alt="" /></span>
+                            <span><img src={imageUrlFormat(comment.profileImgUrl)} alt="" /></span>
                             <span>{comment.nickname}</span>
                             <span>{elapsedTime(comment.createdAt)}</span>
                         </div>
