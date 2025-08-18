@@ -10,6 +10,7 @@ import DeleteCommentButton from "../../../components/article/deleteCommentButton
 import LoginRequiredButton from "../../../components/common/LoginRequiredButton";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import dompurify from "dompurify";
 
 interface IParams {
     params: { id: number }
@@ -101,6 +102,8 @@ export default function Article({ params: { id } }: IParams) {
         return <div className={styles.container}><div className={styles.error}>게시글을 찾을 수 없습니다.</div></div>;
     }
 
+    const sanitizer = dompurify.sanitize;
+
     return <div className={styles.container}>
         <div className={styles.articleBox}>
             <div className={styles.articleTitle}>
@@ -121,7 +124,7 @@ export default function Article({ params: { id } }: IParams) {
                 <h1>{article.result.title}</h1>
             </div>
             <div className={styles.articleText}>
-                <p>{article.result.content}</p>
+                <div dangerouslySetInnerHTML={{ __html: sanitizer(article.result.content) }} />
             </div>
         </div>
         {userInfo && userInfo.result.userId == article.result.userId &&

@@ -10,22 +10,27 @@ import { imageUrlFormat } from "../../utils/stringFormat/image";
 export default function ArticleList() {
     const [articleList, setArticleList] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+
+    const fetchArticles = async (category: string) => {
+        try {
+            setLoading(true);
+            const data = await getArticleList(category, 1);
+            setArticleList(data);
+        } catch (error) {
+            console.error('게시글 목록 로딩 실패:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchArticles = async () => {
-            try {
-                setLoading(true);
-                const data = await getArticleList("FOOD", "SAMSUNG", 1);
-                setArticleList(data);
-            } catch (error) {
-                console.error('게시글 목록 로딩 실패:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        fetchArticles(selectedCategory);
+    }, [selectedCategory]);
 
-        fetchArticles();
-    }, []);
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
+    };
 
     if (loading) {
         return <div className={styles.container}><div style={{textAlign: "center"}}>로딩 중...</div></div>;
@@ -36,6 +41,33 @@ export default function ArticleList() {
     }
 
     return <div className={styles.container}>
+        <div className={styles.categoryButtons}>
+            <button 
+                className={`${styles.categoryButton} ${selectedCategory === "ALL" ? styles.active : ""}`}
+                onClick={() => handleCategoryChange("ALL")}
+            >
+                전체
+            </button>
+            <button 
+                className={`${styles.categoryButton} ${selectedCategory === "NOTICE" ? styles.active : ""}`}
+                onClick={() => handleCategoryChange("NOTICE")}
+            >
+                공지
+            </button>
+            <button 
+                className={`${styles.categoryButton} ${selectedCategory === "FOOD" ? styles.active : ""}`}
+                onClick={() => handleCategoryChange("FOOD")}
+            >
+                먹거리
+            </button>
+            <button 
+                className={`${styles.categoryButton} ${selectedCategory === "GOODS" ? styles.active : ""}`}
+                onClick={() => handleCategoryChange("GOODS")}
+            >
+                굿즈
+            </button>
+        </div>
+
         <div>
 
             {articleList.result.map((article: any) => 

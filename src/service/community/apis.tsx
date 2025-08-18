@@ -7,7 +7,7 @@ export const getTeam = async (name : string) => {
     return response;
 }
 
-export const getArticleList = async (category : string, team: TeamCode, page : number) => {
+export const getArticleList = async (category : string, page : number) => {
     return await api.get(`/article?category=${category}&page=${page}`);
 }
 
@@ -19,11 +19,12 @@ export const getCommentList = async (articleId : number) => {
     return await api.get(`/article/comments?id=${articleId}&page=1`);
 }
 
-export const postArticle = async (category : string, title: string, content : string) => {
+export const postArticle = async (category : string, title: string, content : string, imageUrls?: string[]) => {
     const result = await api.post(`/article`, {
             category: category,
             title: title,
-            content : content
+            content : content,
+            imageUrls: imageUrls || []
         }).then(response => {
             return response;
         })
@@ -97,4 +98,17 @@ export const toggleComment = async (commentId : number, recommend : string) => {
         });
     
     return result;
+}
+
+export const uploadArticleImage = async (articleImage : FormData) => {
+    return await api.post(`/article/image`, articleImage, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(response => {
+        return response;
+    })
+    .catch(error => {
+        return error;
+    })
 }
