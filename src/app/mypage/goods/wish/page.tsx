@@ -1,9 +1,16 @@
 import styles from "../../../../styles/mypage/mypage.module.css"
 import { getMyWishListServer } from "../../../../service/mypage/serverApis";
+import { getUserInfo } from "../../../../service/user/serverApis"
+import LoginPopup from "../../../../components/common/LoginPopup";
 import Category from "../../../../components/mypage/category";
 import Link from "next/link";
 
 export default async function MyWishList() {
+    const userInfo = await getUserInfo();
+        if (userInfo == null) {
+            return <LoginPopup></LoginPopup>
+        }
+
     const wishList = await getMyWishListServer();
 
     if (wishList.result.length == 0) {

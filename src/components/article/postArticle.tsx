@@ -72,7 +72,6 @@ export default function PostArticle() {
         };
     };
 
-    // ReactQuill 설정
     const modules = useMemo(() => ({
         toolbar: {
             container: [

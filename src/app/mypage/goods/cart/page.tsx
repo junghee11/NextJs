@@ -1,9 +1,16 @@
 import styles from "../../../../styles/mypage/mypage.module.css"
 import { getMyCartListServer } from "../../../../service/mypage/serverApis";
+import { getUserInfo } from "../../../../service/user/serverApis"
 import Category from "../../../../components/mypage/category";
+import LoginPopup from "../../../../components/common/LoginPopup";
 import Link from "next/link";
 
 export default async function MyCartList() {
+    const userInfo = await getUserInfo();
+        if (userInfo == null) {
+            return <LoginPopup></LoginPopup>
+        }
+    
     const cartList = await getMyCartListServer();
 
     if (cartList.result.length == 0) {

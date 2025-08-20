@@ -1,5 +1,5 @@
-import styles from "../../../../styles/baseball/goods.module.css"
-import { getGoodsList } from "../../../../service/baseball/apis";
+import styles from "../../../../styles/goods/goods.module.css"
+import { getGoodsList } from "../../../../service/goods/apis";
 import TeamSelector from "../../../../components/baseball/team-selector";
 import { TeamCode } from "../../../../types/baseball/team";
 import Link from "next/link";

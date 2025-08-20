@@ -18,7 +18,7 @@
     width: 310px;
 }
 
-.goods div button {
+.popupButton {
     width: 150px;
     height: 50px;
     margin: 5px;
@@ -31,13 +31,22 @@
     color: white;
 }
 
+.purchaseButton {
+    width: 310px;
+    height: 50px;
+    margin: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid white;
+    background-color: white;
+    color: black;
+}
+
 .goods img {
     width: 330px;
     padding: 5px;
-}
-
-.goods div {
-    width: 400px;
 }
 
 .desc div {

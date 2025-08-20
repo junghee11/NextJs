@@ -1,9 +1,10 @@
-import styles from "../../../../../styles/baseball/goods-info.module.css"
-import { getGoodsDetail } from "../../../../../service/baseball/apis";
+import styles from "../../../../../styles/goods/goods-info.module.css"
+import { getGoodsDetail } from "../../../../../service/goods/apis";
+import GoodsActions from "../../../../../components/goods/GoodsActions";
 
 
 interface IParams {
-    params : {id:number}
+    params : {id:string}
 }
 
 export default async function GoodsInfo({params : {id}} : IParams) {
@@ -27,10 +28,11 @@ export default async function GoodsInfo({params : {id}} : IParams) {
                     <pre></pre>
                     <p>총 상품금액 : <span>{formatNumber(goods.result.price)}</span> 원</p>
                     <p>적립포인트 : {goods.result.pointRate}% ({formatNumber(goods.result.price/100*goods.result.pointRate)}p)</p>
-                    <br />
-                    <button>바로구입</button>
-                    <button>장바구니</button>
-                    <button>찜 <span>♡</span></button>
+                    <GoodsActions 
+                        goodsCode={goods.result.goodsCode}
+                        goodsName={goods.result.name}
+                        price={goods.result.price}
+                    />
                 </div>
             </div>
         </div>

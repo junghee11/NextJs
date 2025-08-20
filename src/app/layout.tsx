@@ -4,8 +4,7 @@ import HeaderMenu from "../components/header/headerMenu"
 import Navigation from "../components/navigation"
 import Footer from "../components/footer/footer"
 
-import { cookies } from "next/headers";
-import { getUserInfo } from "../service/user/apis";
+import { getUserInfo } from "../service/user/serverApis";
 
 export const metadata : Metadata = {
   title: {
@@ -16,10 +15,7 @@ export const metadata : Metadata = {
 }
 
 export default async function RootLayout({children,}: { children: React.ReactNode}) {
-  const cookieStore = cookies();
-  const access_token = cookieStore.get("access_token");
-  const userInfo = await getUserInfo(access_token);
-
+  const userInfo = await getUserInfo();
 
   return (
     <html lang="en">
