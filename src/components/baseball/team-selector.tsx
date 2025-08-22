@@ -4,9 +4,10 @@ import { teamNameByCode } from "../../types/baseball/team";
 
 interface TeamSelectorProps {
     selectedTeam : string;
+    selectedDate : string;
 }
 
-export default async function DateSelector({ selectedTeam }: TeamSelectorProps) {
+export default async function DateSelector({ selectedTeam, selectedDate }: TeamSelectorProps) {
     const teams = Array.from(teamNameByCode.entries());
 
     return <div className={styles.container}>        
@@ -15,7 +16,7 @@ export default async function DateSelector({ selectedTeam }: TeamSelectorProps) 
                     <li key={teamCode} >
                         <Link
                             key={teamCode} 
-                            href={teamCode}         
+                            href={`${teamCode}?date=${selectedDate}`}         
                             className={
                                 selectedTeam === teamCode ? styles.selected : styles.default
                             }

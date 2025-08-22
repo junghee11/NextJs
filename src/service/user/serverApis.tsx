@@ -6,6 +6,4 @@ export async function getUserInfo() {
             console.log(error)
             return null;
         });
-
-    return null;
 }

@@ -15,7 +15,6 @@ export const elapsedTime = (date) => {
 
     var rtnData = "";
 
-    // 년 단위부터 경과 시간 계산 , 알맞는 단위 삽입.
     for (const value of times) {
         const betweenTime = Math.floor(diff / value.milliSeconds);
 
@@ -26,11 +25,35 @@ export const elapsedTime = (date) => {
         }
     }
 
-    // 모든 단위가 맞지 않을 시
     if( rtnData == "" )
     {
         rtnData = "방금";
     }
 
     return rtnData;
+}
+
+export const dateToString = (format:string, date : Date) => {
+    return format.replace(/(yyyy|mm|dd|MM|DD|H|i|s)/g, (t: string): any => {
+        switch (t) {
+            case "yyyy":
+                return date.getFullYear();
+            case "mm":
+                return date.getMonth() + 1;
+            case "dd":
+                return date.getDate();
+            case "MM":
+                return String(date.getMonth() + 1).padStart(2, '0');
+            case "DD":
+                return String(date.getDate()).padStart(2, '0');
+            case "H":
+                return String(date.getHours()).padStart(2, '0');
+            case "i":
+                return String(date.getMinutes()).padStart(2, '0');
+            case "s":
+                return String(date.getSeconds()).padStart(2, '0');
+            default:
+                return "";
+        }
+    });
 }

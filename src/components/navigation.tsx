@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "../styles/navigation.module.css";
+import { dateToString } from "../utils/stringFormat/date"
 
 export default function Navagation() {
     const path = usePathname();
+    const today = new Date();
+    
     return (
         <nav className={styles.nav}>
             <ul>
@@ -13,7 +16,7 @@ export default function Navagation() {
                     <Link href="/">Home</Link>{path === "/" ? "⚾" : ""}
                 </li>
                 <li>
-                    <Link href="/baseball/schedule/all">경기일정</Link>{path.includes("/schedule")  ? "⚾" : ""}
+                    <Link href={"/baseball/schedule/all?date=" + dateToString("yyyy-MM-DD", today)}>경기일정</Link>{path.includes("/schedule")  ? "⚾" : ""}
                 </li>
                 <li>
                     <Link href="/baseball/team/all">순위</Link>{path.includes("/team")  ? "⚾" : ""}

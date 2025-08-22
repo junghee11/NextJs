@@ -25,6 +25,8 @@
 
 .popup h2 {
     margin-bottom: 30px;
+    white-space: pre-line;
+    line-height: 30px;
 }
 
 .popup a {

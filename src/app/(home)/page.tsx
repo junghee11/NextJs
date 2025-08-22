@@ -1,18 +1,14 @@
-import { cookies } from "next/headers";
-
 import styles from "../(home)/home.module.css"
 import Login from "../../components/user/login";
 import UserInfo from "../../components/user/userInfo";
-import { getUserInfo } from "../../service/user/apis";
+import { getUserInfo } from "../../service/user/serverApis";
 
 export const metadata = {
     title : "Home",
 }
 
 export default async function HomePage() {
-    const cookieStore = cookies();
-    const access_token = cookieStore.get("access_token");
-    const userInfo = await getUserInfo(access_token);
+    const userInfo = await getUserInfo();
 
     return <div>
         <div className = {styles.container}>

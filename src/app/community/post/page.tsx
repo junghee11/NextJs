@@ -1,5 +1,4 @@
-import { cookies } from "next/headers";
-import { getUserInfo } from "../../../service/user/apis";
+import { getUserInfo } from "../../../service/user/serverApis";
 
 import styles from "../../../styles/article/article.module.css"
 import PostArticle from "../../../components/article/postArticle";
@@ -7,9 +6,7 @@ import Login from "../../../components/user/login";
 
 
 export default async function postArticle() {
-    const cookieStore = cookies();
-    const access_token = cookieStore.get("access_token");
-    const userInfo = await getUserInfo(access_token);
+    const userInfo = await getUserInfo();
     if (userInfo == null) {
         return <div className={styles.container}>
             <div className={styles.articleBox}>

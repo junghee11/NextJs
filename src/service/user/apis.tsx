@@ -34,10 +34,6 @@ export const userSignUp = async ({ userId, password, name, nickname, phone, coun
     }).then(response => {
         alert("회원가입이 완료되었습니다. 로그인 후 이용해주세요")
 
-        // let path = sessionStorage.getItem("lastPath");
-        // if (path) {
-        //     window.location.href = path;
-        // }
         window.location.href = "/";
 
         return response;
@@ -57,24 +53,16 @@ interface PostSignUp {
     ip:string
 }
 
-export async function getUserInfo(request?:RequestCookie) {
-    if(request != undefined && typeof request.value === "string" && request.value !== ""){
-        return await api.get("/user/info", {
-            private: true,
-            headers: {
-                Authorization: `Bearer ${request.value}`
-            }
-        })
-    } else if(getCookie("access_token") != undefined && typeof getCookie("access_token") === "string" && getCookie("access_token") !== ""){
-        return await api.get("/user/info", {
-            private: true,
-            headers: {
-                Authorization: `Bearer ${request.value}`
-            }
-        })
-    }
+export async function checkUser() {
+    return await api.get("/user/info");
+}
 
-    return null;
+export async function getUserInfo() {
+    return await api.get("/user/info")
+        .catch(error => {
+            console.log(error)
+            return null;
+        });
 }
 
 export const getClientInfo = async () => {
@@ -173,16 +161,10 @@ export const findUserPw = async ( userId : string, name : string, phone : string
     return result;
 };
 
-export const resetUserPw = async ( request : RequestCookie, originalPw : string, newPw : string) => {
-    if(request != undefined && typeof request.value === "string" && request.value !== ""){
-        return await api.post(`/user/user-pw`, {
+export const resetUserPw = async (originalPw : string, newPw : string) => {
+    return await api.post(`/user/user-pw`, {
             originalPw: originalPw,
             newPw: newPw
-        }, {
-            private: true,
-            headers: {
-                Authorization: `Bearer ${request.value}`
-            }
         }).then(response => {
             alert(response.message);
             return true;
@@ -191,25 +173,4 @@ export const resetUserPw = async ( request : RequestCookie, originalPw : string,
             alert(error.response.data.message);
             return false;
         });
-    } else if(getCookie("access_token") != undefined && typeof getCookie("access_token") === "string" && getCookie("access_token") !== ""){
-        return await api.post(`/user/user-pw`, {
-                originalPw: originalPw,
-                newPw: newPw
-            } , {
-            private: true,
-            headers: {
-                Authorization: `Bearer ${request.value}`
-            }
-        }).then(response => {
-            alert(response.message);
-            return true;
-        })
-        .catch(error => {
-            alert(error.response.data.message);
-            return false;
-        });
-    }
-
-    alert(`로그인 후 이용해주세요.`);
-    window.location.href = "/";
 };

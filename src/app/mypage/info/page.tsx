@@ -1,18 +1,13 @@
-import { cookies } from "next/headers";
-
 import styles from "../../../styles/mypage/mypage.module.css"
-import { getUserInfo } from "../../../service/user/apis";
+import { getUserInfo } from "../../../service/user/serverApis";
 import Category from "../../../components/mypage/category";
 import ResetPassword from "../../../components/user/resetPassword";
 import ProfileImageUpload from "../../../components/mypage/ProfileImageUpload";
 import LoginPopup from "../../../components/common/LoginPopup";
 import { imageUrlFormat } from "../../../utils/stringFormat/image";
 
-export default async function MyPage() {
-    const cookieStore = cookies();
-    const access_token = cookieStore.get("access_token");
-    
-    const userInfo = await getUserInfo(access_token);
+export default async function MyPage() {    
+    const userInfo = await getUserInfo();
     if (userInfo == null) {
         return <LoginPopup></LoginPopup>
     }
@@ -22,7 +17,6 @@ export default async function MyPage() {
         <div className = {styles.content}>
             <div className={styles.profileSection}>
                 <ProfileImageUpload currentImageUrl = {imageUrlFormat(userInfo.result.profileImgUrl)}></ProfileImageUpload>
-                {/* <img src={userImg} alt="profile"/> */}
                 <h2>{userInfo.result.nickname}</h2>
                 
                 <div className={styles.infoGrid}>
@@ -52,7 +46,7 @@ export default async function MyPage() {
                     </div>
                 </div>
             </div>
-            <ResetPassword accessToken={access_token}></ResetPassword>
+            <ResetPassword></ResetPassword>
         </div>
     </div>
 }

@@ -7,9 +7,8 @@ export const getTeam = async (name : string) => {
     return response;
 }
 
-export const getMatchSchedule = async (team : string) => {
-    const response = await api.get(`/baseball/schedule/${team.toUpperCase()}`)
-    return response;
+export const getMatchSchedule = async (team : string, date? : string) => {
+    return await api.get(`/baseball/schedule/${team.toUpperCase()}?date=${date}`);
 }
 
 export const getStadiumInfo = async (type: string, keyword : string) => {

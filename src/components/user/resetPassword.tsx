@@ -4,7 +4,7 @@ import styles from "../../styles/user/sign-up.module.css"
 import { resetUserPw } from "../../service/user/apis";
 import { useState } from "react";
 
-export default function resetPassword({accessToken}) {
+export default function resetPassword() {
     const [originalPw, setOriginalPw] = useState('');
     const [newPw, setNewPw] = useState('');
 
@@ -31,7 +31,7 @@ export default function resetPassword({accessToken}) {
         } 
 
         try { 
-            const response = resetUserPw(accessToken, originalPw, newPw);
+            await resetUserPw(originalPw, newPw);
         } catch (error) {
             console.error('문자발송 실패 :', error);
         }

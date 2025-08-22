@@ -9,7 +9,6 @@ import DeleteArticleButton from "../../../components/article/deleteArticleButton
 import DeleteCommentButton from "../../../components/article/deleteCommentButton";
 import LoginRequiredButton from "../../../components/common/LoginRequiredButton";
 import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
 import dompurify from "dompurify";
 
 interface IParams {
@@ -73,10 +72,9 @@ export default function Article({ params: { id } }: IParams) {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const access_token = Cookies.get("access_token");
-                
+
                 const [userData, articleData, commentsData] = await Promise.all([
-                    getUserInfo(access_token),
+                    getUserInfo(),
                     getArticle(id),
                     getCommentList(id)
                 ]);
