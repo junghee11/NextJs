@@ -5,7 +5,7 @@ import styles from "../../styles/article/article.module.css"
 import { getArticleList } from "../../service/community/apis";
 import { useState, useEffect } from "react";
 import { elapsedTime } from "../../utils/stringFormat/date";
-import { imageUrlFormat } from "../../utils/stringFormat/image";
+import { profileImageUrlFormat } from "../../utils/stringFormat/image";
 
 export default function ArticleList() {
     const [articleList, setArticleList] = useState<any>(null);
@@ -75,7 +75,7 @@ export default function ArticleList() {
                     
                     <div className={styles.userBox}>
                         <span>
-                            <img src={imageUrlFormat(article.profileImgUrl)}/>
+                            <img src={profileImageUrlFormat(article.profileImgUrl)}/>
                         </span>
                         <span>{article.nickname}</span>
                         <span>{elapsedTime(article.createdAt)}</span>

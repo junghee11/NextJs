@@ -4,7 +4,7 @@ import Category from "../../../components/mypage/category";
 import ResetPassword from "../../../components/user/resetPassword";
 import ProfileImageUpload from "../../../components/mypage/ProfileImageUpload";
 import LoginPopup from "../../../components/common/LoginPopup";
-import { imageUrlFormat } from "../../../utils/stringFormat/image";
+import { profileImageUrlFormat } from "../../../utils/stringFormat/image";
 
 export default async function MyPage() {    
     const userInfo = await getUserInfo();
@@ -16,7 +16,7 @@ export default async function MyPage() {
         <Category></Category>
         <div className = {styles.content}>
             <div className={styles.profileSection}>
-                <ProfileImageUpload currentImageUrl = {imageUrlFormat(userInfo.result.profileImgUrl)}></ProfileImageUpload>
+                <ProfileImageUpload currentImageUrl = {profileImageUrlFormat(userInfo.result.profileImgUrl)}></ProfileImageUpload>
                 <h2>{userInfo.result.nickname}</h2>
                 
                 <div className={styles.infoGrid}>

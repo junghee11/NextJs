@@ -522,10 +522,6 @@
     box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
 }
 
-.stadiumBox img {
-    border-radius: 0px;
-}
-
 /* 주문/결제 카드 스타일 */
 .orderCard {
     background: #374151;

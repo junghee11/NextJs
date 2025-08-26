@@ -1,32 +1,263 @@
 .container {
-    width: 840px;
-    margin: 0 auto 100px; 
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 100px;
+    padding: 0 20px;
 }
 
 .playerBox {
     display: grid;
-    grid-template-columns: repeat(2, 50%);
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
 }
 
 .player {
-    margin: 20px 20px;
-    text-align: center;
+    background: #1f2937;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.player:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+}
+
+.playerHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.playerImageContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .player img {
-    width: 150px;
-    margin-bottom: 20px;
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
 }
 
-.player table {
-    display: inline-block;
-    border-collapse : collapse;
+.player img:hover {
+    transform: scale(1.05);
+}
+
+.playerInfo {
+    flex: 1;
+    margin-left: 20px;
+    text-align: left;
+}
+
+.playerName {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.playerNumber {
+    background: #3b82f6;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.playerTeam {
+    font-size: 1.1rem;
+    color: #6b7280;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+}
+
+.favoriteButton {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    color: #d1d5db;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.favoriteButton:hover {
+    background: #f3f4f6;
+    transform: scale(1.1);
+}
+
+.favoriteButton.active {
+    color: #fbbf24;
+}
+
+.playerDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.detailItem {
+    background: #374151;
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.detailLabel {
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.detailValue {
+    color: #fff;
+    font-weight: 500;
+    margin: 0;
+}
+
+.statsSection {
+    margin: 20px 0;
+}
+
+.sectionTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sectionTitle::before {
+    content: "📊";
+    font-size: 1rem;
+}
+
+.statsTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
     margin: 10px 0;
 }
 
-.player th {
-    border: 1px solid white;
-    width: 70px;
-    height: 40px;
-    vertical-align : middle;
+.statsTable th,
+.statsTable td {
+    padding: 12px 16px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.statsTable th {
+    background: #3b82f6;
+    color: white;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.statsTable td {
+    color: #1f2937;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.awardsSection {
+    margin: 20px 0;
+}
+
+.awardsSection .sectionTitle::before {
+    content: "🏆";
+}
+
+.awardsContent {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: inherit;
+    color: #92400e;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+}
+
+.songSection {
+    margin: 20px 0 0 0;
+}
+
+.songSection .sectionTitle::before {
+    content: "🎵";
+}
+
+.songContent {
+    background: #f0fdf4;
+    border: 1px solid #22c55e;
+    border-radius: 8px;
+    padding: 16px;
+    color: #15803d;
+    line-height: 1.6;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .playerBox {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .player {
+        padding: 20px;
+    }
+    
+    .playerHeader {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .playerInfo {
+        margin-left: 0;
+        margin-top: 16px;
+        text-align: center;
+    }
+    
+    .playerDetails {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .favoriteButton {
+        position: relative;
+        margin-top: 12px;
+    }
 }

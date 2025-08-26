@@ -13,7 +13,7 @@ export default async function MyTeamInfo() {
             <SelectMyTeamButton myTeam={true} teamCode="SAMSUNG"/>
             
             <div className={styles.teamInfoCard}>
-                <img src={"/images/" + teamInfo.result.imgUrl} alt="team logo"/>
+                <img src={teamInfo.result.imgUrl} alt="team logo"/>
                 <h3>{teamInfo.result.name}</h3>
                 <div className={styles.teamRank}>현재 {teamInfo.result.rank}위</div>
                 

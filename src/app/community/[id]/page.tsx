@@ -4,7 +4,7 @@ import { getUserInfo } from "../../../service/user/apis";
 import { getArticle, getCommentList, addComment, toggleComment } from "../../../service/community/apis";
 import styles from "../../../styles/article/article.module.css"
 import { elapsedTime } from "../../../utils/stringFormat/date";
-import { imageUrlFormat } from "../../../utils/stringFormat/image";
+import { profileImageUrlFormat } from "../../../utils/stringFormat/image";
 import DeleteArticleButton from "../../../components/article/deleteArticleButton";
 import DeleteCommentButton from "../../../components/article/deleteCommentButton";
 import LoginRequiredButton from "../../../components/common/LoginRequiredButton";
@@ -110,7 +110,7 @@ export default function Article({ params: { id } }: IParams) {
                 </div>
                 <p>
                     <strong>
-                        <img src={imageUrlFormat(article.profileImgUrl)} alt="profile" />
+                        <img src={profileImageUrlFormat(article.profileImgUrl)} alt="profile" />
                     </strong> {article.result.nickname}
                     <strong> • </strong>{" "}
                     {elapsedTime(article.result.createdAt)}
@@ -150,7 +150,7 @@ export default function Article({ params: { id } }: IParams) {
                 <div key={comment.idx} className={styles.commentItem}>
                     <div className={styles.commentTitle}>
                         <div className={styles.userBox}>
-                            <span><img src={imageUrlFormat(comment.profileImgUrl)} alt="" /></span>
+                            <span><img src={profileImageUrlFormat(comment.profileImgUrl)} alt="" /></span>
                             <span>{comment.nickname}</span>
                             <span>{elapsedTime(comment.createdAt)}</span>
                         </div>
