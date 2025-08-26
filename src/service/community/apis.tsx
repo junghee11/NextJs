@@ -15,8 +15,12 @@ export const getArticle = async (id : number) => {
     return await api.get(`/article/${id}`);
 }
 
-export const getCommentList = async (articleId : number) => {
-    return await api.get(`/article/comments?id=${articleId}&page=1`);
+export const getCommentList = async (articleId : number, commentId : number) => {
+    if (commentId == null) {
+        return await api.get(`/article/comments?id=${articleId}&page=1`);
+    } else {
+        return await api.get(`/article/comments?id=${articleId}&page=1&commentId=${commentId}`);
+    }
 }
 
 export const postArticle = async (category : string, title: string, content : string, imageUrls?: string[]) => {
@@ -61,9 +65,10 @@ export const deleteArticle = async (id : number) => {
     return result;
 }
 
-export const addComment = async (articleId : number, content : string) => {
+export const addComment = async (articleId : number, commentId : number, content : string) => {
     const result = await api.post(`/article/comment`, {
             articleId: articleId,
+            commentId: commentId,
             content : content
         }).then(response => {
             return response;

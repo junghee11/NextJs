@@ -22,13 +22,28 @@ export default function Article({ params: { id } }: IParams) {
     const [loading, setLoading] = useState(true);
 
     const [commentInput, setCommentInput] = useState("");
+    const [replyStates, setReplyStates] = useState<{[key: number]: boolean}>({});
+    const [replyInputs, setReplyInputs] = useState<{[key: number]: string}>({});
+    const [replys, setReplys] = useState<{[key: number]: any}>({});
 
     const refreshComments = async () => {
         try {
-            const commentsData = await getCommentList(id);
+            const commentsData = await getCommentList(id, null);
             setComments(commentsData);
         } catch (error) {
             console.error('댓글 목록 새로고침 실패:', error);
+        }
+    };
+
+    const refreshReplys = async (commentId : number) => {
+        try {
+            const replyData = await getCommentList(id, commentId);
+            setReplys(prev => ({
+                ...prev,
+                [commentId]: replyData
+            }));
+        } catch (error) {
+            console.error('대댓글 목록 새로고침 실패:', error);
         }
     };
 
@@ -40,7 +55,7 @@ export default function Article({ params: { id } }: IParams) {
         }
 
         try { 
-            const response = await addComment(id, commentInput);
+            const response = await addComment(id, null, commentInput);
             if (typeof response === 'object' && response !== null && 'message' in response) {
                 alert((response as any).message);
             }
@@ -54,17 +69,68 @@ export default function Article({ params: { id } }: IParams) {
         setCommentInput("");
     };
 
-    const handleCommentToggle = async (commentId: number, recommend: string) => {
+    const handleCommentToggle = async (commentId: number, recommend: string, commentGroup : number) => {
         try {
             const response = await toggleComment(commentId, recommend);
             if (typeof response === 'object' && response !== null && 'message' in response) {
                 alert((response as any).message);
             }
 
-            await refreshComments();
+            if (commentGroup) {
+                await refreshReplys(commentGroup);
+            } else {
+                await refreshComments();
+            }
         } catch (error) {
             console.error('댓글 추천/비추천 실패:', error);
             alert(`댓글 추천/비추천 실패`);
+        }
+    };
+
+    const handleGetReplyButton = async (articleId: number, commentId: number) => {
+        setReplyStates(prev => ({
+            ...prev,
+            [commentId]: !prev[commentId]
+        }));
+
+        if (!replyStates[commentId]) {
+            try {
+                const replyData = await getCommentList(articleId, commentId);
+                setReplys(prev => ({
+                    ...prev,
+                    [commentId]: replyData
+                }));
+            } catch (error) {
+                console.error('대댓글 목록 가져오기 실패:', error);
+            }
+        }
+    };
+
+    const handleReplySubmit = async (commentId: number, replyContent: string) => {
+        if (!replyContent.trim() || replyContent.length < 10) {
+            alert("대댓글을 입력해주세요. 댓글은 10자 이상이어야 합니다");
+            return;
+        }
+
+        try {
+            const response = await addComment(id, commentId, replyContent);
+            if (typeof response === 'object' && response !== null && 'message' in response) {
+                alert((response as any).message);
+            }
+
+            setReplyInputs(prev => ({
+                ...prev,
+                [commentId]: ""
+            }));
+
+            const replyData = await getCommentList(id, commentId);
+            setReplys(prev => ({
+                ...prev,
+                [commentId]: replyData
+            }));
+        } catch (error) {
+            console.error('대댓글 등록 실패:', error);
+            alert('대댓글 등록에 실패했습니다.');
         }
     };
 
@@ -76,7 +142,7 @@ export default function Article({ params: { id } }: IParams) {
                 const [userData, articleData, commentsData] = await Promise.all([
                     getUserInfo(),
                     getArticle(id),
-                    getCommentList(id)
+                    getCommentList(id, null)
                 ]);
 
                 setUserInfo(userData);
@@ -156,12 +222,12 @@ export default function Article({ params: { id } }: IParams) {
                         </div>
                         <div className={styles.buttonBox}>
                             <LoginRequiredButton 
-                                onClick={() => handleCommentToggle(comment.idx, 'UP')}
+                                onClick={() => handleCommentToggle(comment.idx, 'UP', null)}
                             >
                                 👍 추천 {comment.up}
                             </LoginRequiredButton>
                             <LoginRequiredButton 
-                                onClick={() => handleCommentToggle(comment.idx, 'DOWN')}
+                                onClick={() => handleCommentToggle(comment.idx, 'DOWN', null)}
                             >
                                 👎 비추천 {comment.down}
                             </LoginRequiredButton>
@@ -175,6 +241,69 @@ export default function Article({ params: { id } }: IParams) {
                         </div>
                     </div>
                     <div className={styles.commentContent}>{comment.content}</div>
+                    <div className={styles.replyButtonBox}>
+                        <button 
+                            onClick={() => handleGetReplyButton(article.result.idx, comment.idx)}
+                        >
+                            💬 댓글
+                        </button>
+                    </div>
+
+                    {replyStates[comment.idx] && (
+                        <div className={styles.replySection}>
+                            {replys[comment.idx] && replys[comment.idx].result.map((reply: any) => (
+                                <div key={reply.idx} className={styles.replyItem}>
+                                    <div className={styles.commentTitle}>
+                                        <div className={styles.userBox}>
+                                            <span><img src={profileImageUrlFormat(reply.profileImgUrl)} alt="" /></span>
+                                            <span>{reply.nickname}</span>
+                                            <span>{elapsedTime(reply.createdAt)}</span>
+                                        </div>
+                                        <div className={styles.buttonBox}>
+                                            <LoginRequiredButton 
+                                                onClick={() => handleCommentToggle(reply.idx, 'UP', comment.idx)}
+                                            >
+                                                👍 추천 {reply.up}
+                                            </LoginRequiredButton>
+                                            <LoginRequiredButton 
+                                                onClick={() => handleCommentToggle(reply.idx, 'DOWN', comment.idx)}
+                                            >
+                                                👎 비추천 {reply.down}
+                                            </LoginRequiredButton>
+                                            
+                                            {userInfo && reply.userId == userInfo.result.userId &&
+                                            <DeleteCommentButton 
+                                                commentId={reply.idx} 
+                                                onCommentDeleted={() => refreshReplys(comment.idx)}
+                                            />
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className={styles.commentContent}>{reply.content}</div>
+                                </div>
+                            ))}
+
+                            <div className={styles.replyForm}>
+                                <textarea
+                                    value={replyInputs[comment.idx] || ""}
+                                    onChange={e => setReplyInputs(prev => ({
+                                        ...prev,
+                                        [comment.idx]: e.target.value
+                                    }))}
+                                    placeholder={!userInfo ? "로그인 후 이용 가능합니다" : "대댓글을 입력하세요"}
+                                    rows={3}
+                                    disabled={!userInfo}
+                                />
+                                <button 
+                                    type="button" 
+                                    disabled={!userInfo}
+                                    onClick={() => handleReplySubmit(comment.idx, replyInputs[comment.idx] || "")}
+                                >
+                                    댓글 등록
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>)}
         </div>
     </div>;

@@ -329,12 +329,108 @@
 }
 
 .commentContent {
-    border-bottom: 1px solid #e5e7eb;
     line-height: 1.6;
     margin-top: 12px;
-    padding : 0 0 12px 0;
+    padding: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.replyButtonBox {
+    display: flex;
+    margin-top: 8px;
+    padding: 8px 0 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.replyButtonBox button {
+    padding: 4px 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #666;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    margin-left : 10px;
+}
+
+.replyButtonBox button:hover {
+    background: #f0f8ff;
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.replySection {
+    margin-left: 20px;
+    margin-top: 12px;
+    padding-left: 20px;
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+}
+
+.replyItem {
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.replyItem:last-of-type {
+    border-bottom: none;
+}
+
+.replyForm {
+    margin-top: 16px;
+    padding-top: 16px;
+}
+
+.replyForm textarea {
+    width: 97%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+    font-family: inherit;
+    background: #fff;
+}
+
+.replyForm textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.replyForm textarea:disabled {
+    font-weight: bold;
+    border: none;
+    background: #f3f4f6;
+    color: #9ca3af;
+}
+
+.replyForm button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.replyForm button:hover:not(:disabled) {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.replyForm button:disabled {
+    background: #d1d5db;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* 수정/삭제 버튼 스타일 */
