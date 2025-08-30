@@ -2,12 +2,18 @@
 
 import styles from "../../styles/article/article.module.css"
 import { postArticle, uploadArticleImage } from "../../service/community/apis";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.snow.css';
+import {ImageActions} from '@xeger/quill-image-actions'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
+const registerQuillModules = async () => {
+    const { default: Quill } = await import('quill');
+    Quill.register('modules/imageActions', ImageActions);
+};
 
 export default function PostArticle() {
     const router = useRouter();
@@ -15,83 +21,71 @@ export default function PostArticle() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
-    const imageHandler = () => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
+    useEffect(() => {
+        registerQuillModules();
+    }, []);
 
-        input.onchange = async () => {
-            const file = input.files?.[0];
-            if (file) {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert('파일 크기는 10MB 이하로 업로드해주세요.');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('file', file);
-
-                try {
-                    const response = await uploadArticleImage(formData);
-                    
-                    if (response && response.imageUrl) {
-                        const imageUrl = process.env.NEXT_PUBLIC_AWS_IMAGE_URL + response.imageUrl;
-                        
-                        const size = prompt('이미지 크기를 선택하세요:\n1. 작게 (200px)\n2. 보통 (400px)\n3. 크게 (원본 크기)', '2');
-                        
-                        let width = '400px';
-                        switch(size) {
-                            case '1':
-                                width = '200px';
-                                break;
-                            case '2':
-                                width = '400px';
-                                break;
-                            case '3':
-                                width = '100%';
-                                break;
-                            default:
-                                width = '400px';
-                        }
-                        
-                        // HTML img 태그를 직접 content에 삽입
-                        const imgTag = `<img src="${imageUrl}" alt="uploaded image" style="width: ${width}; height: auto; max-width: 100%; border-radius: 8px; margin: 16px 0; display: block;" />`;
-                        setContent(prev => prev + imgTag);
-                        
-                        console.log('이미지가 에디터에 삽입되었습니다.');
-                    } else {
-                        console.error('Invalid response or missing imageUrl:', response);
-                        alert('이미지 업로드 응답이 올바르지 않습니다.');
-                    }
-                } catch (error) {
-                    console.error('Image upload error:', error);
-                    alert('이미지 업로드 중 오류가 발생했습니다.');
-                }
-            }
-        };
-    };
 
     const modules = useMemo(() => ({
+        imageActions: {},
         toolbar: {
             container: [
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                 ['bold', 'italic', 'underline', 'strike'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['blockquote', 'code-block'],
-                ['link', 'image'],
-                ['clean']
+                [{ 'align': [] }],
+                ['link', 'image']
             ],
             handlers: {
-                image: imageHandler
+                image: function() {
+                    const quill = this.quill;
+                    
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+                    input.click();
+
+                    input.onchange = async () => {
+                        const file = input.files?.[0];
+                        if (file) {
+                            if (file.size > 10 * 1024 * 1024) {
+                                alert('파일 크기는 10MB 이하로 업로드해주세요.');
+                                return;
+                            }
+
+                            const formData = new FormData();
+                            formData.append('file', file);
+
+                            try {
+                                const response = await uploadArticleImage(formData);
+                                
+                                if (response && response.imageUrl) {
+                                    const imageUrl = process.env.NEXT_PUBLIC_AWS_IMAGE_URL + response.imageUrl;
+                                    
+                                    const range = quill.getSelection();
+                                    const index = range ? range.index : quill.getLength();
+                                    
+                                    quill.insertEmbed(index, 'image', imageUrl);
+                                    quill.setSelection(index + 1);
+
+                                } else {
+                                    console.error('Invalid response or missing imageUrl:', response);
+                                    alert('이미지 업로드 응답이 올바르지 않습니다.');
+                                }
+                            } catch (error) {
+                                console.error('Image upload error:', error);
+                                alert('이미지 업로드 중 오류가 발생했습니다.');
+                            }
+                        }
+                    };
+                }
             }
-        },
+        }
     }), []);
 
     const formats = [
         'header', 'bold', 'italic', 'underline', 'strike',
         'list', 'bullet', 'blockquote', 'code-block',
-        'link', 'image'
+        'link', 'image',
+        'height', 'width', 'float', 'align'
     ];
 
     async function clickPostButton (event: React.MouseEvent<HTMLButtonElement>) {

@@ -228,6 +228,30 @@
     object-fit: contain;
 }
 
+/* Quill 정렬 클래스 지원 */
+.articleText :global(.ql-align-center) {
+    text-align: center;
+}
+
+.articleText :global(.ql-align-right) {
+    text-align: right;
+}
+
+.articleText :global(.ql-align-justify) {
+    text-align: justify;
+}
+
+.articleText :global(.ql-align-center img) {
+    display: block;
+    margin: 0 auto;
+}
+
+.articleText :global(.ql-align-right img) {
+    display: block;
+    margin-left: auto;
+    margin-right: 0;
+}
+
 /* 카테고리 버튼 스타일 */
 .categoryButtons {
     display: flex;

@@ -10,6 +10,7 @@ import DeleteCommentButton from "../../../components/article/deleteCommentButton
 import LoginRequiredButton from "../../../components/common/LoginRequiredButton";
 import { useState, useEffect } from "react";
 import dompurify from "dompurify";
+import ReplyItem from "../../../components/article/replyItem";
 
 interface IParams {
     params: { id: number }
@@ -213,6 +214,7 @@ export default function Article({ params: { id } }: IParams) {
         </div>
         <div>
             {comments && comments.result.map((comment: any) => 
+                comment.state == 0 ? (
                 <div key={comment.idx} className={styles.commentItem}>
                     <div className={styles.commentTitle}>
                         <div className={styles.userBox}>
@@ -236,8 +238,7 @@ export default function Article({ params: { id } }: IParams) {
                             <DeleteCommentButton 
                                 commentId={comment.idx} 
                                 onCommentDeleted={refreshComments}
-                            />
-                            }
+                            />}
                         </div>
                     </div>
                     <div className={styles.commentContent}>{comment.content}</div>
@@ -252,35 +253,16 @@ export default function Article({ params: { id } }: IParams) {
                     {replyStates[comment.idx] && (
                         <div className={styles.replySection}>
                             {replys[comment.idx] && replys[comment.idx].result.map((reply: any) => (
-                                <div key={reply.idx} className={styles.replyItem}>
-                                    <div className={styles.commentTitle}>
-                                        <div className={styles.userBox}>
-                                            <span><img src={profileImageUrlFormat(reply.profileImgUrl)} alt="" /></span>
-                                            <span>{reply.nickname}</span>
-                                            <span>{elapsedTime(reply.createdAt)}</span>
-                                        </div>
-                                        <div className={styles.buttonBox}>
-                                            <LoginRequiredButton 
-                                                onClick={() => handleCommentToggle(reply.idx, 'UP', comment.idx)}
-                                            >
-                                                👍 추천 {reply.up}
-                                            </LoginRequiredButton>
-                                            <LoginRequiredButton 
-                                                onClick={() => handleCommentToggle(reply.idx, 'DOWN', comment.idx)}
-                                            >
-                                                👎 비추천 {reply.down}
-                                            </LoginRequiredButton>
-                                            
-                                            {userInfo && reply.userId == userInfo.result.userId &&
-                                            <DeleteCommentButton 
-                                                commentId={reply.idx} 
-                                                onCommentDeleted={() => refreshReplys(comment.idx)}
-                                            />
-                                            }
-                                        </div>
-                                    </div>
-                                    <div className={styles.commentContent}>{reply.content}</div>
-                                </div>
+                                <ReplyItem
+                                    key={reply.idx}
+                                    comment={reply}
+                                    userInfo={userInfo}
+                                    styles={styles}
+                                    isReply={true}
+                                    onToggle={handleCommentToggle}
+                                    onDeleted={() => refreshReplys(comment.idx)}
+                                    parentCommentId={comment.idx}
+                                />
                             ))}
 
                             <div className={styles.replyForm}>
@@ -290,7 +272,7 @@ export default function Article({ params: { id } }: IParams) {
                                         ...prev,
                                         [comment.idx]: e.target.value
                                     }))}
-                                    placeholder={!userInfo ? "로그인 후 이용 가능합니다" : "대댓글을 입력하세요"}
+                                    placeholder={!userInfo ? "로그인 후 이용 가능합니다" : "댓글을 입력하세요"}
                                     rows={3}
                                     disabled={!userInfo}
                                 />
@@ -304,7 +286,45 @@ export default function Article({ params: { id } }: IParams) {
                             </div>
                         </div>
                     )}
-                </div>)}
+                </div>
+                ) : (
+                    <div key={comment.idx} className={styles.commentItem}>
+                        <div className={styles.commentTitle}>
+                            <div className={styles.userBox}>
+                                <span>-</span>
+                                <span>{elapsedTime(comment.createdAt)}</span>
+                            </div>
+                        </div>
+                        <div className={styles.commentContent} style={{color: '#999', fontStyle: 'italic'}}>
+                            삭제처리된 댓글입니다
+                        </div>
+                        <div className={styles.replyButtonBox}>
+                        <button 
+                            onClick={() => handleGetReplyButton(article.result.idx, comment.idx)}
+                        >
+                            💬 댓글
+                        </button>
+                    </div>
+
+                    {replyStates[comment.idx] && (
+                        <div className={styles.replySection}>
+                            {replys[comment.idx] && replys[comment.idx].result.map((reply: any) => (
+                                <ReplyItem
+                                    key={reply.idx}
+                                    comment={reply}
+                                    userInfo={userInfo}
+                                    styles={styles}
+                                    isReply={true}
+                                    onToggle={handleCommentToggle}
+                                    onDeleted={() => refreshReplys(comment.idx)}
+                                    parentCommentId={comment.idx}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    </div>
+                )
+            )}
         </div>
     </div>;
 }
