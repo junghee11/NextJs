@@ -1,78 +1,33 @@
-"use client"
-
 import Link from "next/link";
 import styles from "../../styles/article/article.module.css"
 import { getArticleList } from "../../service/community/apis";
-import { useState, useEffect } from "react";
 import { elapsedTime } from "../../utils/stringFormat/date";
 import { profileImageUrlFormat } from "../../utils/stringFormat/image";
+import CategoryButtons from "../../components/article/CategoryButtons";
+import Pagination from "../../components/article/Pagination";
 
-export default function ArticleList() {
-    const [articleList, setArticleList] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+interface PageProps {
+  searchParams: { category?: string; page?: string }
+}
 
-    const fetchArticles = async (category: string) => {
-        try {
-            setLoading(true);
-            const data = await getArticleList(category, 1);
-            setArticleList(data);
-        } catch (error) {
-            console.error('게시글 목록 로딩 실패:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+export default async function ArticleList({ searchParams }: PageProps) {
+    const category = searchParams.category || 'ALL';
+    const page = parseInt(searchParams.page || '1');
 
-    useEffect(() => {
-        fetchArticles(selectedCategory);
-    }, [selectedCategory]);
-
-    const handleCategoryChange = (category: string) => {
-        setSelectedCategory(category);
-    };
-
-    if (loading) {
-        return <div className={styles.container}><div style={{textAlign: "center"}}>로딩 중...</div></div>;
-    }
-
-    if (!articleList) {
+    let articleList;
+    try {
+        articleList = await getArticleList(category, page);
+    } catch (error) {
+        console.error('게시글 목록 로딩 실패:', error);
         return <div className={styles.container}><div style={{textAlign: "center"}}>데이터를 불러올 수 없습니다</div></div>;
     }
 
     return <div className={styles.container}>
-        <div className={styles.categoryButtons}>
-            <button 
-                className={`${styles.categoryButton} ${selectedCategory === "ALL" ? styles.active : ""}`}
-                onClick={() => handleCategoryChange("ALL")}
-            >
-                전체
-            </button>
-            <button 
-                className={`${styles.categoryButton} ${selectedCategory === "NOTICE" ? styles.active : ""}`}
-                onClick={() => handleCategoryChange("NOTICE")}
-            >
-                공지
-            </button>
-            <button 
-                className={`${styles.categoryButton} ${selectedCategory === "FOOD" ? styles.active : ""}`}
-                onClick={() => handleCategoryChange("FOOD")}
-            >
-                먹거리
-            </button>
-            <button 
-                className={`${styles.categoryButton} ${selectedCategory === "GOODS" ? styles.active : ""}`}
-                onClick={() => handleCategoryChange("GOODS")}
-            >
-                굿즈
-            </button>
-        </div>
+        <CategoryButtons currentCategory={category} />
 
         <div>
-
             {articleList.result.map((article: any) => 
                 <div key={article.idx} className={styles.articleListBox}>
-                    
                     <div className={styles.userBox}>
                         <span>
                             <img src={profileImageUrlFormat(article.profileImgUrl)}/>
@@ -94,9 +49,15 @@ export default function ArticleList() {
                     </div>
                 </div>)}
         </div>
+        
+        <Pagination 
+            currentPage={page} 
+            totalPages={articleList.pageCount}
+            category={category}
+        />
+        
         <div className={styles.articleButton}>
             <Link href="/community/post">글쓰기</Link>
         </div>
-    </div>
-    ;
+    </div>;
 }

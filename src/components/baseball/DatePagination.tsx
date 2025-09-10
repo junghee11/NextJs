@@ -35,15 +35,15 @@ export default function DatePagination({ type, baseDate, onDateChange }: DatePag
     onDateChange?.(selectedDateObj);
   };
 
-  const prevDate = new Date();
-  const nextDate = new Date();
+  const prevDate = new Date(centerDate);
+  const nextDate = new Date(centerDate);
 
   if (type == "team") {
     prevDate.setMonth(centerDate.getMonth() - 1);
     nextDate.setMonth(centerDate.getMonth() + 1);
   } else {
-    prevDate.setDate(centerDate.getDate() - 1);
-    nextDate.setDate(centerDate.getDate() + 1);
+    prevDate.setDate(prevDate.getDate() - 1);
+    nextDate.setDate(nextDate.getDate() + 1);
   }  
 
   return (

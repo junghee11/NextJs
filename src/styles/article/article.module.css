@@ -713,3 +713,68 @@
         justify-content: center;
     }
 }
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 32px 0;
+    padding: 16px 0;
+}
+
+.pageButton {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageButton:hover {
+    border-color: #9ca3af;
+    background-color: #f9fafb;
+    color: #374151;
+}
+
+.pageButton.active {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border-color: #3b82f6;
+}
+
+.pageButton.active:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.pageButton:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+    border-color: #e5e7eb;
+}
+
+@media (max-width: 768px) {
+    .pagination {
+        gap: 4px;
+        margin: 24px 0;
+    }
+    
+    .pageButton {
+        padding: 6px 8px;
+        min-width: 36px;
+        height: 36px;
+        font-size: 12px;
+    }
+}

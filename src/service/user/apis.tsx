@@ -60,7 +60,6 @@ export async function checkUser() {
 export async function getUserInfo() {
     return await api.get("/user/info")
         .catch(error => {
-            console.log(error)
             return null;
         });
 }
