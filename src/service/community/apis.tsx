@@ -15,9 +15,9 @@ export const getArticle = async (id : number) => {
     return await api.get(`/article/${id}`);
 }
 
-export const getCommentList = async (articleId : number, commentId : number) => {
+export const getCommentList = async (articleId : number, page : number, commentId : number) => {
     if (commentId == null) {
-        return await api.get(`/article/comments?id=${articleId}&page=1`);
+        return await api.get(`/article/comments?id=${articleId}&page=${page}`);
     } else {
         return await api.get(`/article/comments?id=${articleId}&page=1&commentId=${commentId}`);
     }

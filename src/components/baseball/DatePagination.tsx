@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import styles from '../../styles/baseball/DatePagination.module.css';
+import styles from '../../styles/baseball/datePagination.module.css';
 import { dateToString } from '../../utils/stringFormat/date'
 
 interface DatePaginationProps {

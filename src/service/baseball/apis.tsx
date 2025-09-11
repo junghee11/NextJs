@@ -19,12 +19,8 @@ export const getStadiumInfo = async (type: string, keyword : string) => {
     }
 }
 
-export const getPlayerInfo = async (type: string, keyword : string) => {
-    if(!type) {
-        return await api.get(`/baseball/player?type=all`);
-    } else {
-        return await api.get(`/baseball/player?type=${type}&keyword=${keyword}`);
-    }
+export const getPlayerInfo = async (type: string, keyword : string, page : number) => {
+    return await api.get(`/baseball/player?type=${type}&page=${page}&keyword=${keyword}`);
 }
 
 export const getRestaurantInfo = async (id: number) => {

@@ -11,6 +11,7 @@ import LoginRequiredButton from "../../../components/common/LoginRequiredButton"
 import { useState, useEffect } from "react";
 import dompurify from "dompurify";
 import ReplyItem from "../../../components/article/replyItem";
+import Pagenation from "../../../components/common/Pagination";
 
 interface IParams {
     params: { id: number }
@@ -20,6 +21,8 @@ export default function Article({ params: { id } }: IParams) {
     const [userInfo, setUserInfo] = useState<any>(null);
     const [article, setArticle] = useState<any>(null);
     const [comments, setComments] = useState<any>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
 
     const [commentInput, setCommentInput] = useState("");
@@ -27,10 +30,11 @@ export default function Article({ params: { id } }: IParams) {
     const [replyInputs, setReplyInputs] = useState<{[key: number]: string}>({});
     const [replys, setReplys] = useState<{[key: number]: any}>({});
 
-    const refreshComments = async () => {
+    const refreshComments = async (page : number) => {
         try {
-            const commentsData = await getCommentList(id, null);
+            const commentsData = await getCommentList(id, page, null);
             setComments(commentsData);
+            setTotalPages(commentsData.page);
         } catch (error) {
             console.error('댓글 목록 새로고침 실패:', error);
         }
@@ -38,7 +42,7 @@ export default function Article({ params: { id } }: IParams) {
 
     const refreshReplys = async (commentId : number) => {
         try {
-            const replyData = await getCommentList(id, commentId);
+            const replyData = await getCommentList(id, null, commentId);
             setReplys(prev => ({
                 ...prev,
                 [commentId]: replyData
@@ -47,6 +51,13 @@ export default function Article({ params: { id } }: IParams) {
             console.error('대댓글 목록 새로고침 실패:', error);
         }
     };
+
+    const handleCommentPageChange = (page: number) => {
+        setCurrentPage(page);
+
+        refreshComments(page);
+    };
+
 
     const handleCommentSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,7 +72,7 @@ export default function Article({ params: { id } }: IParams) {
                 alert((response as any).message);
             }
             
-            await refreshComments();
+            await refreshComments(currentPage);
         } catch (error) {
             console.error(error);
             alert('댓글 등록에 실패했습니다.');
@@ -80,7 +91,7 @@ export default function Article({ params: { id } }: IParams) {
             if (commentGroup) {
                 await refreshReplys(commentGroup);
             } else {
-                await refreshComments();
+                await refreshComments(currentPage);
             }
         } catch (error) {
             console.error('댓글 추천/비추천 실패:', error);
@@ -96,7 +107,7 @@ export default function Article({ params: { id } }: IParams) {
 
         if (!replyStates[commentId]) {
             try {
-                const replyData = await getCommentList(articleId, commentId);
+                const replyData = await getCommentList(articleId, null, commentId);
                 setReplys(prev => ({
                     ...prev,
                     [commentId]: replyData
@@ -124,7 +135,7 @@ export default function Article({ params: { id } }: IParams) {
                 [commentId]: ""
             }));
 
-            const replyData = await getCommentList(id, commentId);
+            const replyData = await getCommentList(id, null, commentId);
             setReplys(prev => ({
                 ...prev,
                 [commentId]: replyData
@@ -143,12 +154,13 @@ export default function Article({ params: { id } }: IParams) {
                 const [userData, articleData, commentsData] = await Promise.all([
                     getUserInfo(),
                     getArticle(id),
-                    getCommentList(id, null)
+                    getCommentList(id, 1, null)
                 ]);
 
                 setUserInfo(userData);
                 setArticle(articleData);
                 setComments(commentsData);
+                setTotalPages(commentsData.page);
             } catch (error) {
                 console.error('데이터 로딩 실패:', error);
             } finally {
@@ -237,7 +249,7 @@ export default function Article({ params: { id } }: IParams) {
                             {userInfo && comment.userId == userInfo.result.userId &&
                             <DeleteCommentButton 
                                 commentId={comment.idx} 
-                                onCommentDeleted={refreshComments}
+                                onCommentDeleted={() => refreshComments(currentPage)}
                             />}
                         </div>
                     </div>
@@ -325,6 +337,13 @@ export default function Article({ params: { id } }: IParams) {
                     </div>
                 )
             )}
+        </div>
+        <div>
+            <Pagenation
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handleCommentPageChange}
+            />
         </div>
     </div>;
 }

@@ -2,12 +2,14 @@ import styles from "../../../../styles/baseball/player-info.module.css"
 import { getTeam, getPlayerInfo } from "../../../../service/baseball/apis";
 import { getUserInfo } from "../../../../service/user/serverApis";
 import TeamSelector from "../../../../components/baseball/team-selector";
+import ServerPagination from "../../../../components/common/ServerPagination";
 import FavoritePlayerButton from "../../../../components/baseball/FavoritePlayerButton";
 import { profileImageUrlFormat } from "../../../../utils/stringFormat/image";
 
 
 interface IParams {
-    params : {name:string}
+    params : { name?: string };
+    searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata({params : {name}} : IParams) {
@@ -17,9 +19,10 @@ export async function generateMetadata({params : {name}} : IParams) {
     }
 }
 
-export default async function PlayerInfo({params : {name}} : IParams) {
+export default async function PlayerInfo({params : {name}, searchParams} : IParams) {
+    const page = Number(searchParams?.page) || 1;
     const type = name == "all" ? "all" : "team";
-    const players = await getPlayerInfo(type, name);
+    const players = await getPlayerInfo(type, name, page);
     const userInfo = await getUserInfo();
     const favoritePlayers : Set<number> = new Set<number>(userInfo?.result.player);
 
@@ -93,5 +96,10 @@ export default async function PlayerInfo({params : {name}} : IParams) {
                     </div>
                 </div>)}
             </div>
+        <ServerPagination
+            currentPage={page}
+            totalPages={players.page}
+            basePath={`/baseball/player/${name}`}
+        />
     </div>;
 }

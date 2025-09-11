@@ -7,7 +7,7 @@ interface TeamSelectorProps {
     selectedDate : string;
 }
 
-export default async function DateSelector({ selectedTeam, selectedDate }: TeamSelectorProps) {
+export default async function TeamSelector({ selectedTeam, selectedDate }: TeamSelectorProps) {
     const teams = Array.from(teamNameByCode.entries());
 
     return <div className={styles.container}>        
