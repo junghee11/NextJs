@@ -9,7 +9,7 @@ export default function Login() {
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
 
-    async function clickLoginButton (event: React.MouseEvent<HTMLButtonElement>) {
+    async function handleLogin (event: React.FormEvent) {
         event.preventDefault();
 
         if (userId == null || userId == "") {
@@ -20,8 +20,7 @@ export default function Login() {
             return;
         }
 
-
-        try { 
+        try {
             const response = userLogin(userId, password);
             console.log('로그인 성공:', response);
         } catch (error) {
@@ -30,27 +29,27 @@ export default function Login() {
     }
 
     return <div className={styles.container}>
-        <form name="login">
+        <form name="login" onSubmit={handleLogin}>
             <div>
-                <input 
-                    type="text" 
-                    placeholder="아이디를 입력해주세요" 
-                    value={userId} 
+                <input
+                    type="text"
+                    placeholder="아이디를 입력해주세요"
+                    value={userId}
                     name="userId"
                     onChange={(event) => setUserId(event.target.value)}
                 />
             </div>
             <div>
-                <input 
-                    type="password" 
-                    placeholder="비밀번호를 입력해주세요" 
-                    value={password} 
+                <input
+                    type="password"
+                    placeholder="비밀번호를 입력해주세요"
+                    value={password}
                     name="password"
                     onChange={(event) => setPassword(event.target.value)}
                 />
             </div>
             <div>
-                <button type="button" onClick={clickLoginButton}>
+                <button type="submit">
                     로그인
                 </button>
             </div>

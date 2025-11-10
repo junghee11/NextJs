@@ -13,7 +13,6 @@ export default async function HomePage() {
     return <div>
         <div className = {styles.container}>
             <img src="/images/logo.png" alt="I ❤ baseball"/>
-            <p>Welcome!</p>
             <p>팀을 응원해주세요 ❤</p>
             {userInfo ? 
                 <UserInfo 

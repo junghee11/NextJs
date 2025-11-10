@@ -34,7 +34,7 @@ export default async function PlayerInfo({params : {name}, searchParams} : IPara
             {players.result.map(player => <div className={styles.player} key={player.idx}>
                     <div className={styles.playerHeader}>
                         <div className={styles.playerImageContainer}>
-                            <img src={profileImageUrlFormat(player.img_url)} alt={`${player.name} 선수이미지`} />
+                            <img src={player.imgUrl ? player.imgUrl : "/images/common/profile.png"} alt={`${player.name} 선수이미지`} />
                         </div>
                         <div className={styles.playerInfo}>
                             <h2 className={styles.playerName}>
@@ -67,22 +67,40 @@ export default async function PlayerInfo({params : {name}, searchParams} : IPara
 
                     <div className={styles.statsSection}>
                         <h4 className={styles.sectionTitle}>시즌 실적</h4>
-                        <table className={styles.statsTable}>
-                            <thead>
-                                <tr>
-                                    <th>안타</th>
-                                    <th>홈런</th>
-                                    <th>타점</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{player.hit}</td>
-                                    <td>{player.homeRun}</td>
-                                    <td>{player.run}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {player.position.includes("투수") ? 
+                            (<table className={styles.statsTable}>
+                                <thead>
+                                    <tr>
+                                        <th>피안타</th>
+                                        <th>이닝</th>
+                                        <th>포볼</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{player.hit}</td>
+                                        <td>{player.inning}</td>
+                                        <td>{player.fourBall}</td>
+                                    </tr>
+                                </tbody>
+                            </table>)  : 
+                            (<table className={styles.statsTable}>
+                                <thead>
+                                    <tr>
+                                        <th>안타</th>
+                                        <th>홈런</th>
+                                        <th>도루</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{player.hit}</td>
+                                        <td>{player.homeRun}</td>
+                                        <td>{player.run}</td>
+                                    </tr>
+                                </tbody>
+                            </table>)
+                        }
                     </div>
 
                     <div className={styles.awardsSection}>
