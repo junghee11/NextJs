@@ -9,7 +9,7 @@ export default function Login() {
     const [userId, setUserId] = useState('');
     const [password, setPassword] = useState('');
 
-    async function handleLogin (event: React.FormEvent) {
+    async function handleLogin (event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (userId == null || userId == "") {
@@ -21,8 +21,7 @@ export default function Login() {
         }
 
         try {
-            const response = userLogin(userId, password);
-            console.log('로그인 성공:', response);
+            userLogin(userId, password);
         } catch (error) {
             console.error('로그인 실패:', error);
         }

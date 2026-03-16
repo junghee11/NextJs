@@ -37,6 +37,8 @@ export const useStompClient = (brokerURL: string) => {
             reconnectDelay: 5000, 
             onConnect: () => {
                 setIsConnected(true);
+
+                console.log('Connected to STOMP broker');
                 
                 subscriptionsRef.current.forEach(sub => {
                     client.subscribe(sub.destination, sub.callback);
@@ -51,9 +53,15 @@ export const useStompClient = (brokerURL: string) => {
                 setIsConnected(false);
             },
             onStompError: (frame) => {
-                console.error('Broker reported error: ' + frame.headers['message']);
-                console.error('Additional details: ' + frame.body);
+                alert(frame.headers['message']);
+                client.deactivate();
             },
+            onWebSocketError: (event) => {
+                console.error('WebSocket error: ' + event);
+            },
+            onWebSocketClose: (event) => {
+                console.log('WebSocket closed: ' + event);
+            }
         });
 
         client.activate();

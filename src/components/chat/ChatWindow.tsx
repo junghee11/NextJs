@@ -10,6 +10,7 @@ import { getChatFriends, getChatRoom, getChatMessages} from '../../service/chat/
 type NavType = 'users' | 'rooms';
 type Message = { id: string; roomId: string; senderId: string; type: string; content: string; createdAt: string };
 type Room = { id: string; roomName: string, roomType : string, messageCount : number, participants : string[]};
+type Toast = { id: number; message: string };
 
 interface UserInfo {
     result: {
@@ -32,10 +33,12 @@ export default function ChatWindow() {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [friends, setFriends] = useState<Friend[]>([]);
     const [chatList, setChatList] = useState<Message[]>([]);
+    const [toasts, setToasts] = useState<Toast[]>([]);
     const { publish, subscribe } = useStomp();
     const subscriptions = useRef(new Map());
     const messageAreaRef = useRef<HTMLDivElement>(null);
     const selectedRoomRef = useRef<string | null>(null);
+    const toastIdCounter = useRef(0);
 
     useEffect(() => {
         selectedRoomRef.current = selectedRoom;
@@ -66,6 +69,28 @@ export default function ChatWindow() {
 
         fetchData();
     }, []);
+
+    const showToast = useCallback((message: string) => {
+        const id = toastIdCounter.current++;
+
+        setToasts(prev => [...prev, { id, message }]);
+
+        setTimeout(() => {
+            setToasts(prev => prev.filter(toast => toast.id !== id));
+        }, 1000);
+    }, []);
+
+    useEffect(() => {
+        if (!subscribe) return;
+
+        const publicSubscription = subscribe('/topic/public', message => {
+            showToast(message.body);
+        });
+
+        return () => {
+            publicSubscription?.unsubscribe();
+        };
+    }, [subscribe, showToast]);
 
     useEffect(() => {
         if (rooms.length === 0 || !subscribe) return;
@@ -264,6 +289,15 @@ export default function ChatWindow() {
                     <button type="submit" disabled={!selectedRoom}>전송</button>
                 </form>
             </div>
+            {toasts.length > 0 && (
+                <div className={styles.toastContainer}>
+                    {toasts.map(toast => (
+                        <div key={toast.id} className={styles.toast}>
+                            {toast.message}
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
