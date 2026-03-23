@@ -30,7 +30,7 @@ export const useStompClient = (brokerURL: string) => {
         const client = new Client({
             brokerURL,
             connectHeaders: headers, 
-            webSocketFactory: () => new SockJS(process.env.NEXT_PUBLIC_DEV_API_URL + '/ws'),
+            webSocketFactory: () => new SockJS(brokerURL),
             debug: (str) => { 
                 // console.log(new Date(), str); 
             }, 
