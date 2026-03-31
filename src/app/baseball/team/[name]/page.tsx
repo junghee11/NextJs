@@ -1,19 +1,18 @@
 import styles from "../../../../styles/baseball/team-info.module.css"
-import { getTeam } from "../../../../service/baseball/apis";
+import { getTeamList } from "../../../../service/baseball/apis";
 
 interface IParams {
     params : {name:string}
 }
 
 export async function generateMetadata({params : {name}} : IParams) {
-    const team = await getTeam(name);
     return {
-        title: "all" == name ? "team" : team.result.name,
+        title: "team",
     }
 }
 
 export default async function BaseBallMatchSchedule() {
-    const teams = await getTeam("all");
+    const teams = await getTeamList();
 
     return <div>
         <table className={styles.container}>

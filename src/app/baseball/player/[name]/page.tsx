@@ -4,8 +4,9 @@ import { getUserInfo } from "../../../../service/user/serverApis";
 import TeamSelector from "../../../../components/baseball/team-selector";
 import ServerPagination from "../../../../components/common/ServerPagination";
 import FavoritePlayerButton from "../../../../components/baseball/FavoritePlayerButton";
-import { profileImageUrlFormat } from "../../../../utils/stringFormat/image";
-
+import { UserInfoResponse } from "../../../../types/user/user"
+import { TeamDetailResponse } from "../../../../types/baseball/team"
+import { PlayerListResponse } from "../../../../types/baseball/player"
 
 interface IParams {
     params : { name?: string };
@@ -13,7 +14,7 @@ interface IParams {
 }
 
 export async function generateMetadata({params : {name}} : IParams) {
-    const team = await getTeam(name);
+    const team : TeamDetailResponse = await getTeam(name);
     return {
         title: "all" == name ? "team" : team.result.name,
     }
@@ -22,8 +23,8 @@ export async function generateMetadata({params : {name}} : IParams) {
 export default async function PlayerInfo({params : {name}, searchParams} : IParams) {
     const page = Number(searchParams?.page) || 1;
     const type = name == "all" ? "all" : "team";
-    const players = await getPlayerInfo(type, name, page);
-    const userInfo = await getUserInfo();
+    const players : PlayerListResponse = (await getPlayerInfo(type, name, page)) || { result: [], page: 0 };
+    const userInfo : UserInfoResponse = await getUserInfo();
     const favoritePlayers : Set<number> = new Set<number>(userInfo?.result.player);
 
     return <div className={styles.container}>

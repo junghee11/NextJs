@@ -2,6 +2,7 @@ import styles from "../../../../styles/goods/goods.module.css"
 import { getGoodsList } from "../../../../service/goods/apis";
 import TeamSelector from "../../../../components/baseball/team-selector";
 import { TeamCode } from "../../../../types/baseball/team";
+import { GoodsListResponse } from "../../../../types/baseball/goods"
 import Link from "next/link";
 
 
@@ -10,8 +11,7 @@ interface IParams {
 }
 
 export default async function GoodsList({params : {name}} : IParams) {
-    const GoodsList = await getGoodsList(name, 1, "idx");
-
+    const GoodsList : GoodsListResponse = (await getGoodsList(name, 1, "idx")) || { result: [], totalCount : 0 };
     const formatNumber = (number) => {
         return new Intl.NumberFormat('en-US', {
             maximumFractionDigits: 0, 
@@ -20,7 +20,7 @@ export default async function GoodsList({params : {name}} : IParams) {
 
     return <div className={styles.container}>
         <div>
-            <TeamSelector selectedTeam={name} />
+            <TeamSelector selectedTeam={name} selectedDate={null} />
         </div>
         <div className={styles.goodsBox}>
             {GoodsList.result.map(goods => <div className={styles.goods} key={goods.idx}>

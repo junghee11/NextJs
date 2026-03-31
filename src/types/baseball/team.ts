@@ -17,3 +17,26 @@ export const teamNameByCode : Map<TeamCode, TeamName> = new Map([
     ["KIWOOM", "키움 히어로즈"],
     
 ])
+
+export interface Team {
+    idx: number;
+    teamCode: TeamCode;
+    name: string;
+    rank: number;
+    win: number;
+    draw: number;
+    loose: number;
+    director: string;
+    stadium: string;
+    imgUrl: string;
+    homepage: string;
+    outline: string;
+}
+
+export interface TeamDetailResponse {
+    result: Team;
+}
+
+export interface TeamListResponse {
+    result: Team[];
+}

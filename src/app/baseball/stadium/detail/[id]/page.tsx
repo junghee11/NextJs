@@ -1,13 +1,13 @@
 import styles from "../../../../../styles/baseball/stadium-detail.module.css"
 import { getStadiumInfo } from "../../../../../service/baseball/apis";
-
+import { StadiumDetailResponse } from "../../../../../types/baseball/stadium"
 
 interface IParams {
     params : {id:string}
 }
 
 export default async function StadiumInfo({params : {id}} : IParams) {
-    const stadium = await getStadiumInfo("id", id);
+    const stadium : StadiumDetailResponse = await getStadiumInfo(id);
 
     return <div className={styles.container}>
         <div className={styles.stadiumMain}>

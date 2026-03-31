@@ -4,9 +4,10 @@ import styles from "../../../styles/mypage/mypage.module.css"
 import { leaveSite } from "../../../service/mypage/apis";
 import Category from "../../../components/mypage/category";
 import {deleteCookie} from "cookies-next";
+import React from "react";
 
 export default function LeaveSite() {
-    const clickLeaveSiteButton = async () => {
+    const clickLeaveSiteButton = async (event: React.MouseEvent) => {
         event.preventDefault();
         try {
             const response = await leaveSite();

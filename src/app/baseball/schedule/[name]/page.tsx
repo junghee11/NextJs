@@ -2,6 +2,7 @@ import styles from "../../../(home)/home.module.css"
 import TeamSelector from "../../../../components/baseball/team-selector";
 import Schedule from "../../../../components/baseball/MatchSchedule";
 import { getTeam } from "../../../../service/baseball/apis";
+import { TeamDetailResponse } from "../../../../types/baseball/team"
 
 interface IParams {
     params : {name:string}

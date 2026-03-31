@@ -1,10 +1,15 @@
 import { TeamCode } from "../../types/baseball/team";
 import serverApi from "../ServerApiClient"
+import { TeamDetailResponse } from "../../types/baseball/team";
+import { StadiumListResponse } from "../../types/baseball/stadium";
+import { PlayerListResponse } from "../../types/baseball/player";
+import { ArticleListResponse, CommentListResponse } from "../../types/community/community";
+import { CartListResponse, GoodsListResponse, ReceiptListResponse, ReceiptDetailResponse } from "../../types/baseball/goods";
 
 export const dynamic = 'force-dynamic';
 
 export const getMyTeamInfoServer = async () => {
-    return await serverApi.get(`/mypage/baseball/team`);
+    return await serverApi.get<TeamDetailResponse>(`/mypage/baseball/team`);
 }
 
 export const selectMyTeamServer = async (team: TeamCode) => {
@@ -21,7 +26,7 @@ export const selectMyTeamServer = async (team: TeamCode) => {
 }
 
 export const getMyStadiumListServer = async () => {
-    return await serverApi.get(`/mypage/baseball/stadium`);
+    return await serverApi.get<StadiumListResponse>(`/mypage/baseball/stadium`);
 }
 
 export const toggleStadiumServer = async (stadiumId: number) => {
@@ -29,7 +34,7 @@ export const toggleStadiumServer = async (stadiumId: number) => {
 }
 
 export const getMyPlayerListServer = async () => {
-    return await serverApi.get(`/mypage/baseball/player`);
+    return await serverApi.get<PlayerListResponse>(`/mypage/baseball/player`);
 }
 
 export const togglePlayerServer = async (playerId: number) => {
@@ -37,25 +42,25 @@ export const togglePlayerServer = async (playerId: number) => {
 }
 
 export const getMyArticleListServer = async () => {
-    return await serverApi.get(`/mypage/article`);
+    return await serverApi.get<ArticleListResponse>(`/mypage/article`);
 }
 
 export const getMyCommentListServer = async () => {
-    return await serverApi.get(`/mypage/comment`);
+    return await serverApi.get<CommentListResponse>(`/mypage/comment`);
 } 
 
 export const getMyCartListServer = async () => {
-    return await serverApi.get(`/mypage/shop/cart`);
+    return await serverApi.get<CartListResponse>(`/mypage/shop/cart`);
 } 
 
 export const getMyWishListServer = async () => {
-    return await serverApi.get(`/mypage/shop/wish`);
+    return await serverApi.get<GoodsListResponse>(`/mypage/shop/wish`);
 } 
 
 export const getMyPurchaseListServer = async () => {
-    return await serverApi.get(`/mypage/shop/purchase`);
+    return await serverApi.get<ReceiptListResponse>(`/mypage/shop/purchase`);
 } 
 
 export const getMyReceiptDetailServer = async (receiptId : string) => {
-    return await serverApi.get(`/mypage/shop/purchase/${receiptId}`);
+    return await serverApi.get<ReceiptDetailResponse>(`/mypage/shop/purchase/${receiptId}`);
 } 

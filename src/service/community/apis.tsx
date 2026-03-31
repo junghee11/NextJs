@@ -1,4 +1,4 @@
-import { TeamCode } from "../../types/baseball/team";
+import { ArticleDetailResponse, CommentListResponse, AddCommentResponse, UploadImageResponse } from "../../types/community/community";
 import api from "../ApiClient"
 
 export const dynamic = 'force-dynamic';
@@ -12,14 +12,14 @@ export const getArticleList = async (category : string, page : number) => {
 }
 
 export const getArticle = async (id : number) => {
-    return await api.get(`/article/${id}`);
+    return await api.get<ArticleDetailResponse>(`/article/${id}`);
 }
 
 export const getCommentList = async (articleId : number, page : number, commentId : number) => {
     if (commentId == null) {
-        return await api.get(`/article/comments?id=${articleId}&page=${page}`);
+        return await api.get<CommentListResponse>(`/article/comments?id=${articleId}&page=${page}`);
     } else {
-        return await api.get(`/article/comments?id=${articleId}&page=1&commentId=${commentId}`);
+        return await api.get<CommentListResponse>(`/article/comments?id=${articleId}&page=1&commentId=${commentId}`);
     }
 }
 
@@ -66,7 +66,7 @@ export const deleteArticle = async (id : number) => {
 }
 
 export const addComment = async (articleId : number, commentId : number, content : string) => {
-    const result = await api.post(`/article/comment`, {
+    const result = await api.post<AddCommentResponse>(`/article/comment`, {
             articleId: articleId,
             commentId: commentId,
             content : content
@@ -106,7 +106,7 @@ export const toggleComment = async (commentId : number, recommend : string) => {
 }
 
 export const uploadArticleImage = async (articleImage : FormData) => {
-    return await api.post(`/article/image`, articleImage, {
+    return await api.post<UploadImageResponse>(`/article/image`, articleImage, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

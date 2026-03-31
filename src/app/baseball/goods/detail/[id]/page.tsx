@@ -1,14 +1,14 @@
 import styles from "../../../../../styles/goods/goods-info.module.css"
 import { getGoodsDetail } from "../../../../../service/goods/apis";
 import GoodsActions from "../../../../../components/goods/GoodsActions";
-
+import { GoodsDetailResponse } from "../../../../../types/baseball/goods"
 
 interface IParams {
     params : {id:string}
 }
 
 export default async function GoodsInfo({params : {id}} : IParams) {
-    const goods = await getGoodsDetail(id);
+    const goods : GoodsDetailResponse = await getGoodsDetail(id);
 
     const formatNumber = (number) => {
         return new Intl.NumberFormat('en-US', {

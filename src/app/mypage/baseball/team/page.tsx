@@ -10,7 +10,7 @@ export default async function MyTeamInfo() {
     return <div className = {styles.container}>
         <Category></Category>
         <div className = {styles.content}>
-            <SelectMyTeamButton myTeam={true} teamCode="SAMSUNG"/>
+            <SelectMyTeamButton myTeam={null}/>
             
             <div className={styles.teamInfoCard}>
                 <img src={teamInfo.result.imgUrl} alt="team logo"/>

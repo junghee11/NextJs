@@ -46,10 +46,10 @@ export const getMyCommentList = async () => {
 
 export const leaveSite = async () => {
     return await api.post(`/user/leave`).then(response => {
-        return response;
+        return response.data;
     })
     .catch(error => {
-        return error.response.data.message;
+        return error.response.data;
     });    
 }
 

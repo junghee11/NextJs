@@ -1,8 +1,9 @@
 import styles from "../../../../styles/baseball/stadium-info.module.css"
-import { getTeam, getStadiumInfo } from "../../../../service/baseball/apis";
+import { getTeam, getStadiumList } from "../../../../service/baseball/apis";
 import { getUserInfo } from "../../../../service/user/serverApis";
 import TeamSelector from "../../../../components/baseball/team-selector";
 import FavoriteStadiumButton from "../../../../components/baseball/FavoriteStadiumButton";
+import { StadiumListResponse } from "../../../../types/baseball/stadium"
 
 
 interface IParams {
@@ -18,7 +19,7 @@ export async function generateMetadata({params : {name}} : IParams) {
 
 export default async function StadiumInfo({params : {name}} : IParams) {
     const type = name == "all" ? "all" : "team";
-    const stadiums = await getStadiumInfo(type, name);
+    const stadiums : StadiumListResponse = await getStadiumList(type, name);
     const userInfo = await getUserInfo();
     const favoriteStadiums : Set<number> = new Set<number>(userInfo?.result.stadium)
 
