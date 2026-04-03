@@ -6,8 +6,6 @@ import { PlayerListResponse } from "../../types/baseball/player";
 import { ArticleListResponse, CommentListResponse } from "../../types/community/community";
 import { CartListResponse, GoodsListResponse, ReceiptListResponse, ReceiptDetailResponse } from "../../types/baseball/goods";
 
-export const dynamic = 'force-dynamic';
-
 export const getMyTeamInfoServer = async () => {
     return await serverApi.get<TeamDetailResponse>(`/mypage/baseball/team`);
 }

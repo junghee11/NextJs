@@ -6,10 +6,9 @@ import { FaUsers, FaCommentAlt } from 'react-icons/fa';
 import { useStomp } from '../../context/StompClientProvider';
 import { getUserInfo } from "../../service/user/apis";
 import { getChatFriends, getChatRoom, getChatMessages} from '../../service/chat/apis';
+import { ChatRoom, ChatMessage } from '../../types/chat/chat';
 
 type NavType = 'users' | 'rooms';
-type Message = { id: string; roomId: string; senderId: string; type: string; content: string; createdAt: string };
-type Room = { id: string; roomName: string, roomType : string, messageCount : number, participants : string[]};
 type Toast = { id: number; message: string };
 
 interface UserInfo {
@@ -30,9 +29,9 @@ export default function ChatWindow() {
     const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
     const [message, setMessage] = useState('');
     const [messageAllCount, setMessageAllCount] = useState(0);
-    const [rooms, setRooms] = useState<Room[]>([]);
+    const [rooms, setRooms] = useState<ChatRoom[]>([]);
     const [friends, setFriends] = useState<Friend[]>([]);
-    const [chatList, setChatList] = useState<Message[]>([]);
+    const [chatList, setChatList] = useState<ChatMessage[]>([]);
     const [toasts, setToasts] = useState<Toast[]>([]);
     const { publish, subscribe } = useStomp();
     const subscriptions = useRef(new Map());
@@ -56,7 +55,7 @@ export default function ChatWindow() {
                 setMyInfo(userInfo as UserInfo);
                 setFriends(friendList.result || []);
 
-                const initialRooms = roomList.result.map((room: Room) => ({
+                const initialRooms = roomList.result.map((room: ChatRoom) => ({
                     ...room,
                     messageCount: room.messageCount || 0,
                 }));
@@ -190,12 +189,15 @@ export default function ChatWindow() {
                 } else {
                     publish?.(`/app/chat.privateMessage`, {"receiverId": friend.userId});
 
-                    const newRoom: Room = {
+                    const newRoom: ChatRoom = {
                         id: roomId,
                         roomName: friend.nickname,
                         roomType: "DIRECT",
                         messageCount: 0,
-                        participants: userIds
+                        participants: userIds,
+                        createdBy: myInfo.result.userId,
+                        createdAt: new Date().toISOString(),
+                        isActive: true,
                     };
                     setRooms(prevRooms => [...prevRooms, newRoom]);
                     setSelectedRoom(roomId);

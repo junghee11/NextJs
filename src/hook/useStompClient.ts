@@ -89,5 +89,11 @@ export const useStompClient = (brokerURL: string) => {
         }
     };
 
-    return { connect, subscribe, publish, isConnected };
+    const disconnect = () => {
+      if (clientRef.current && clientRef.current.active) {
+          clientRef.current.deactivate();
+      }
+    };
+
+    return { connect, subscribe, publish, disconnect, isConnected, client: clientRef };
 };

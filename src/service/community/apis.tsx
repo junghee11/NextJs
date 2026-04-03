@@ -1,7 +1,6 @@
 import { ArticleDetailResponse, CommentListResponse, AddCommentResponse, UploadImageResponse } from "../../types/community/community";
 import api from "../ApiClient"
 
-export const dynamic = 'force-dynamic';
 export const getTeam = async (name : string) => {
     const response = await api.get(`/baseball/team/${name.toUpperCase()}`)
     return response;

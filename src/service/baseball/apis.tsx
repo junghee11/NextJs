@@ -4,14 +4,13 @@ import { MatchListResponse } from "../../types/baseball/match";
 import { StadiumDetailResponse, StadiumListResponse, RestaurantDetailResponse } from "../../types/baseball/stadium";
 import api from "../ApiClient"
 
-export const dynamic = 'force-dynamic';
 export const getTeam = async (name : string) => {
     const response = await api.get<TeamDetailResponse>(`/baseball/team/${name.toUpperCase()}`)
     return response;
 }
 
 export const getTeamList = async () => {
-    const response = await api.get<TeamListResponse>(`/baseball/team/ALL}`)
+    const response = await api.get<TeamListResponse>(`/baseball/team/ALL`)
     return response;
 }
 
@@ -39,8 +38,12 @@ export const getRestaurantInfo = async (id: number) => {
     return await api.get<RestaurantDetailResponse>(`/baseball/restaurant/${id}`);
 }
 
+interface toggleResponse {
+    toggle: boolean
+}
+
 export const toggleStadium = async (idx : number) => {
-    return await api.patch(`/mypage/baseball/stadium/${idx}`
+    return await api.patch<toggleResponse>(`/mypage/baseball/stadium/${idx}`
     ).then(response => {
         if(response.toggle) {
             return response.toggle;
@@ -61,7 +64,7 @@ export const toggleStadium = async (idx : number) => {
 }
 
 export const togglePlayer = async (idx : number) => {
-    return await api.patch(`/mypage/baseball/player/${idx}`
+    return await api.patch<toggleResponse>(`/mypage/baseball/player/${idx}`
     ).then(response => {
         if(response.toggle) {
             return response.toggle;

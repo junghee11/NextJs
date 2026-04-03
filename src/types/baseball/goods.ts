@@ -42,6 +42,12 @@ export interface PurchaseDto {
     price: number;
 }
 
+export interface paymentDto {
+    tid: string;
+    next_redirect_pc_url: string;
+    createdAt: string;
+}
+
 export interface GoodsDetailResponse {
     result: Goods;
 }
@@ -61,4 +67,8 @@ export interface ReceiptListResponse {
 
 export interface ReceiptDetailResponse {
     result: PurchaseDto[];
+}
+
+export interface PaymentResponse {
+    result: paymentDto;
 }

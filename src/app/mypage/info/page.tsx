@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import styles from "../../../styles/mypage/mypage.module.css"
 import { getUserInfo } from "../../../service/user/serverApis";
 import Category from "../../../components/mypage/category";

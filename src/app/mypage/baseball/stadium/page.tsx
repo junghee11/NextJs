@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import styles from "../../../../styles/mypage/mypage.module.css"
 import stadiumStyle from "../../../../styles/baseball/stadium-info.module.css"
 import { getMyStadiumListServer } from "../../../../service/mypage/serverApis";

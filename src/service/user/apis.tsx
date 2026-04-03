@@ -1,10 +1,10 @@
-import { CookieValueTypes, getCookie, setCookie } from "cookies-next";
+import { setCookie } from "cookies-next";
 import api from "../ApiClient"
-import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import axios from "axios";
+import {UserLoginResponse, MessageResponse, FindUserIdResponse, FindUserPwResponse} from "../../types/user/user"
 
 export const userLogin = async (id: string, password: string) => {
-    const result = await api.post(`/user/login`, {
+    const result = await api.post<UserLoginResponse>(`/user/login`, {
         type: "login",
         userId: id,
         password: password
@@ -70,7 +70,7 @@ export const getClientInfo = async () => {
 }
 
 export const checkUserId = async ( userId : string) => {
-    const result = await api.get(`/user/check/id?userId=${userId}`).then(response => {
+    const result = await api.get<MessageResponse>(`/user/check/id?userId=${userId}`).then(response => {
         alert(response.message);
         return true;
     })
@@ -83,7 +83,7 @@ export const checkUserId = async ( userId : string) => {
 };
 
 export const checkNickname = async ( nickname : string) => {
-    const result = await api.get(`/user/check/nickname?nickname=${nickname}`).then(response => {
+    const result = await api.get<MessageResponse>(`/user/check/nickname?nickname=${nickname}`).then(response => {
         alert(response.message);
         return true;
     })
@@ -96,7 +96,7 @@ export const checkNickname = async ( nickname : string) => {
 };
 
 export const sendSmsUserPhone = async ( phone : string, name : string, type : string) => {
-    const result = await api.post(`/user/phone-sms/verification-code`, {
+    const result = await api.post<MessageResponse>(`/user/phone-sms/verification-code`, {
         phone: phone,
         name: name,
         type : type
@@ -105,7 +105,7 @@ export const sendSmsUserPhone = async ( phone : string, name : string, type : st
         return true;
     })
     .catch(error => {
-        alert(error.response.data.message);
+        alert(error.message);
         return false;
     });
 
@@ -113,7 +113,7 @@ export const sendSmsUserPhone = async ( phone : string, name : string, type : st
 };
 
 export const checkUserPhone = async ( phone : string, name : string, code : string, type : string) => {
-    const result = await api.post(`/user/check/phone`, {
+    const result = await api.post<MessageResponse>(`/user/check/phone`, {
         phone: phone,
         name: name,
         code: code,
@@ -131,7 +131,7 @@ export const checkUserPhone = async ( phone : string, name : string, code : stri
 };
 
 export const findUserId = async ( name : string, phone : string) => {
-    const result = await api.get(`/user/user-id?name=${name}&phone=${phone}`).then(response => {
+    const result = await api.get<FindUserIdResponse>(`/user/user-id?name=${name}&phone=${phone}`).then(response => {
         alert(`회원님의 아이디는 ${response.userId} 입니다.`)
         window.location.href = "/";
 
@@ -146,7 +146,7 @@ export const findUserId = async ( name : string, phone : string) => {
 };
 
 export const findUserPw = async ( userId : string, name : string, phone : string) => {
-    const result = await api.get(`/user/user-pw?userId=${userId}&name=${name}&phone=${phone}`).then(response => {
+    const result = await api.get<FindUserPwResponse>(`/user/user-pw?userId=${userId}&name=${name}&phone=${phone}`).then(response => {
         alert(`임시 비밀번호 : ${response.tempPw}\n${response.message}`)
         window.location.href = "/";
 
@@ -161,7 +161,7 @@ export const findUserPw = async ( userId : string, name : string, phone : string
 };
 
 export const resetUserPw = async (originalPw : string, newPw : string) => {
-    return await api.post(`/user/user-pw`, {
+    return await api.post<MessageResponse>(`/user/user-pw`, {
             originalPw: originalPw,
             newPw: newPw
         }).then(response => {

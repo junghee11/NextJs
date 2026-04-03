@@ -1,8 +1,6 @@
 import { TeamCode } from "../../types/baseball/team";
 import api from "../ApiClient"
 
-export const dynamic = 'force-dynamic';
-
 export const getMyTeamInfo = () => {
     return api.get(`/mypage/baseball/team`);
 }
@@ -44,17 +42,21 @@ export const getMyCommentList = async () => {
     return await api.get(`/mypage/comment`);
 }
 
+interface messageResponse { message: string };
+
 export const leaveSite = async () => {
-    return await api.post(`/user/leave`).then(response => {
-        return response.data;
+    return await api.post<messageResponse>(`/user/leave`).then(response => {
+        return response;
     })
     .catch(error => {
         return error.response.data;
     });    
 }
 
+interface changeProfileImageResponse { message: string; imageUrl: string; };
+
 export const changeProfileImage = async (profileImage : FormData) => {
-    return await api.post(`/mypage/profile/image`, profileImage, {
+    return await api.post<changeProfileImageResponse>(`/mypage/profile/image`, profileImage, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }

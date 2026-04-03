@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import styles from "../../../../styles/mypage/mypage.module.css"
 import playerStyles from "../../../../styles/baseball/player-info.module.css"
 import { getMyPlayerListServer } from "../../../../service/mypage/serverApis";

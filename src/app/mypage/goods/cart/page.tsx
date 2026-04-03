@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import styles from "../../../../styles/mypage/mypage.module.css"
 import { getMyCartListServer } from "../../../../service/mypage/serverApis";
 import { getUserInfo } from "../../../../service/user/serverApis"

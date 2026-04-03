@@ -1,8 +1,6 @@
 import { TeamCode } from "../../types/baseball/team";
-import { GoodsListResponse, GoodsDetailResponse } from "../../types/baseball/goods";
+import { GoodsListResponse, GoodsDetailResponse, PaymentResponse } from "../../types/baseball/goods";
 import api from "../ApiClient"
-
-export const dynamic = 'force-dynamic';
 
 export const getGoodsList = async (team: TeamCode, page : number, order : string) => {
     return await api.get<GoodsListResponse>(`/shop/goods?team=${team}&page=${page}&order=${order}`);
@@ -13,7 +11,7 @@ export const getGoodsDetail = async (goodsCode: string) => {
 }
 
 export const purchaseGoods = async (goodsCode : string, count : number, payType : string) => {
-    return await api.post(`/shop/goods`, {
+    return await api.post<PaymentResponse>(`/shop/goods`, {
         id : goodsCode,
         count : count,
         payType : payType
