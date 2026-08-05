@@ -13,3 +13,7 @@ export const getChatRoom = async () => {
 export const getChatMessages = async (roomId : string, page : number) => {
     return await api.get<ChatMessageListResponse>(`/mypage/chat/message?roomId=${roomId}&page=${page}`);
 }
+
+export const leaveChatRoom = async (roomId : string) => {
+    return await api.delete(`/mypage/chat/room/${roomId}`);
+}

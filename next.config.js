@@ -2,8 +2,6 @@
 const nextConfig = {
   output: 'standalone',
 
-  telemetry: false,
-
   images: {
     domains: [], 
   },

@@ -1,99 +1,141 @@
-import { useEffect, useRef, useState } from 'react';
-import { Client, IMessage } from '@stomp/stompjs';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-interface Subscription {
+interface RegistryEntry {
     destination: string;
     callback: (message: IMessage) => void;
+    stompSub: StompSubscription | null;
 }
 
-export const useStompClient = (brokerURL: string) => {
+export interface SubscriptionHandle {
+    unsubscribe: () => void;
+}
+
+export type StompErrorListener = (message: string) => void;
+
+export const useStompClient = (brokerURL?: string) => {
     const clientRef = useRef<Client | null>(null);
     const [isConnected, setIsConnected] = useState(false);
-    const subscriptionsRef = useRef<Subscription[]>([]);
+    const registryRef = useRef<Map<number, RegistryEntry>>(new Map());
+    const subIdCounter = useRef(0);
+    const firstConnectCallbackRef = useRef<(() => void) | null>(null);
+    const errorListenersRef = useRef<Set<StompErrorListener>>(new Set());
+
+    const notifyError = useCallback((message: string) => {
+        errorListenersRef.current.forEach(listener => listener(message));
+    }, []);
+
+    const onError = useCallback((listener: StompErrorListener) => {
+        errorListenersRef.current.add(listener);
+        return () => {
+            errorListenersRef.current.delete(listener);
+        };
+    }, []);
+
+    const safeCallback = (entry: RegistryEntry) => (message: IMessage) => {
+        try {
+            entry.callback(message);
+        } catch (error) {
+            console.error('Error in subscription callback:', error);
+        }
+    };
+
+    const connect = useCallback((headers: { [key: string]: string }, onFirstConnect?: () => void) => {
+        if (clientRef.current?.active) return;
+        if (!brokerURL) {
+            console.error('WebSocket broker URL is not configured.');
+            return;
+        }
+
+        firstConnectCallbackRef.current = onFirstConnect ?? null;
+
+        const client = new Client({
+            connectHeaders: headers,
+            webSocketFactory: () => new SockJS(brokerURL),
+            reconnectDelay: 5000,
+            onConnect: () => {
+                setIsConnected(true);
+
+                // 재연결 시 기존 구독 복구 (핸들 갱신, 중복 없음)
+                registryRef.current.forEach(entry => {
+                    entry.stompSub = client.subscribe(entry.destination, safeCallback(entry));
+                });
+
+                // 최초 연결 1회만 콜백 실행 (재연결 시 창 자동 오픈 방지)
+                if (firstConnectCallbackRef.current) {
+                    firstConnectCallbackRef.current();
+                    firstConnectCallbackRef.current = null;
+                }
+            },
+            onDisconnect: () => {
+                setIsConnected(false);
+                registryRef.current.forEach(entry => { entry.stompSub = null; });
+            },
+            onStompError: (frame) => {
+                notifyError(frame.headers['message'] || '채팅 서버 오류가 발생했습니다.');
+                client.deactivate();
+                setIsConnected(false);
+            },
+            onWebSocketClose: () => {
+                setIsConnected(false);
+                registryRef.current.forEach(entry => { entry.stompSub = null; });
+            },
+            onWebSocketError: (event) => {
+                console.error('WebSocket error:', event);
+            },
+        });
+
+        client.activate();
+        clientRef.current = client;
+    }, [brokerURL, notifyError]);
+
+    const subscribe = useCallback((destination: string, callback: (message: IMessage) => void): SubscriptionHandle => {
+        const id = subIdCounter.current++;
+        const entry: RegistryEntry = { destination, callback, stompSub: null };
+        registryRef.current.set(id, entry);
+
+        if (clientRef.current?.connected) {
+            entry.stompSub = clientRef.current.subscribe(destination, safeCallback(entry));
+        }
+
+        return {
+            unsubscribe: () => {
+                const target = registryRef.current.get(id);
+                registryRef.current.delete(id);
+                try {
+                    target?.stompSub?.unsubscribe();
+                } catch (error) {
+                    console.error('Unsubscribe failed:', error);
+                }
+            },
+        };
+    }, []);
+
+    const publish = useCallback((destination: string, body: unknown) => {
+        if (clientRef.current?.connected) {
+            clientRef.current.publish({ destination, body: JSON.stringify(body) });
+        } else {
+            notifyError('채팅 서버에 연결되어 있지 않습니다.');
+        }
+    }, [notifyError]);
+
+    const disconnect = useCallback(() => {
+        registryRef.current.clear();
+        if (clientRef.current?.active) {
+            clientRef.current.deactivate();
+        }
+        clientRef.current = null;
+        setIsConnected(false);
+    }, []);
 
     useEffect(() => {
         return () => {
-            if (clientRef.current && clientRef.current.active) {
-                console.log('Disconnecting STOMP client...');
+            if (clientRef.current?.active) {
                 clientRef.current.deactivate();
             }
         };
     }, []);
 
-    const connect = (headers: { [key: string]: any }, onConnectCallback?: () => void) => {
-        if (clientRef.current && clientRef.current.active) {
-            console.log('Already connected.');
-            return;
-        }
-
-        const client = new Client({
-            brokerURL,
-            connectHeaders: headers, 
-            webSocketFactory: () => new SockJS(brokerURL),
-            debug: (str) => { 
-                // console.log(new Date(), str); 
-            }, 
-            reconnectDelay: 5000, 
-            onConnect: () => {
-                setIsConnected(true);
-
-                console.log('Connected to STOMP broker');
-                
-                subscriptionsRef.current.forEach(sub => {
-                    client.subscribe(sub.destination, sub.callback);
-                });
-
-                if (onConnectCallback) {
-                    onConnectCallback();
-                }
-            },
-            onDisconnect: () => {
-                console.log('Disconnected from STOMP broker');
-                setIsConnected(false);
-            },
-            onStompError: (frame) => {
-                alert(frame.headers['message']);
-                client.deactivate();
-            },
-            onWebSocketError: (event) => {
-                console.error('WebSocket error: ' + event);
-            },
-            onWebSocketClose: (event) => {
-                console.log('WebSocket closed: ' + event);
-            }
-        });
-
-        client.activate();
-        clientRef.current = client; 
-    };
-
-    const subscribe = (destination: string, callback: (message: IMessage) => void) => {
-        const subscription = { destination, callback };
-        subscriptionsRef.current.push(subscription);
-
-        if (clientRef.current && clientRef.current.active) {
-            return clientRef.current.subscribe(destination, (message) => {
-                try {
-                    callback(message);
-                } catch (error) {
-                    console.error('Error in subscription callback:', error);
-                }
-            })
-        }
-    };
-
-    const publish = (destination: string, body: any) => {
-        if (clientRef.current && clientRef.current.active) {
-            clientRef.current.publish({ destination, body: JSON.stringify(body)});
-        }
-    };
-
-    const disconnect = () => {
-      if (clientRef.current && clientRef.current.active) {
-          clientRef.current.deactivate();
-      }
-    };
-
-    return { connect, subscribe, publish, disconnect, isConnected, client: clientRef };
+    return { connect, subscribe, publish, disconnect, isConnected, onError };
 };
