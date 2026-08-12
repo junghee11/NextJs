@@ -7,3 +7,4 @@ export const QUEUE_ERRORS = '/user/queue/errors';
 // 발행 (송신)
 export const appSendMessage = (roomId: string) => `/app/chat.sendMessage/${roomId}`;
 export const APP_PRIVATE_MESSAGE = '/app/chat.privateMessage';
+export const appInviteRoom = (roomId: string) => `/app/chat.invite/${roomId}`;

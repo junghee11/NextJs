@@ -4,6 +4,7 @@ import { FaUserCircle, FaTimes } from 'react-icons/fa';
 import styles from '../../styles/chat/Chat.module.css';
 import { User } from '../../types/user/user';
 import { teamNameByCode, TeamCode } from '../../types/baseball/team';
+import { profileImageUrlFormat } from "../../utils/stringFormat/image";
 
 interface Props {
     user: User;
@@ -22,7 +23,7 @@ export default function ProfileModal({ user, onClose }: Props) {
                 <div className={styles.profileImageWrap}>
                     {user.profileImgUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={user.profileImgUrl} alt={`${user.nickname} 프로필`} />
+                        <img src={profileImageUrlFormat(user.profileImgUrl)} alt={`${user.nickname} 프로필`} />
                     ) : (
                         <FaUserCircle className={styles.profileImagePlaceholder} />
                     )}

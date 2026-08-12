@@ -2,22 +2,23 @@
 
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import styles from '../../styles/chat/Chat.module.css';
-import { FaUsers, FaCommentAlt, FaBars, FaSignOutAlt } from 'react-icons/fa';
+import { FaUsers, FaCommentAlt, FaBars, FaSignOutAlt, FaUserPlus } from 'react-icons/fa';
 import { useStomp } from '../../context/StompClientProvider';
 import { getUserInfo } from '../../service/user/apis';
-import { getChatFriends, getChatRoom, getChatMessages, leaveChatRoom } from '../../service/chat/apis';
+import { getChatFriends, getChatRoom, getChatMessages, leaveChatRoom, createChatRoom } from '../../service/chat/apis';
 import { ChatRoom, ChatMessage } from '../../types/chat/chat';
 import { User, UserInfoResponse } from '../../types/user/user';
 import { SubscriptionHandle } from '../../hook/useStompClient';
 import ProfileModal from './ProfileModal';
 import ErrorModal from './ErrorModal';
+import MemberPickerModal from './MemberPickerModal';
 import {
     TOPIC_PUBLIC,
     topicChatRoom,
     QUEUE_PRIVATE_ROOM,
     QUEUE_ERRORS,
     appSendMessage,
-    APP_PRIVATE_MESSAGE,
+    appInviteRoom,
 } from './chatConstants';
 
 type NavType = 'users' | 'rooms';
@@ -45,6 +46,8 @@ export default function ChatWindow({ isOpen }: Props) {
     const [profileUser, setProfileUser] = useState<User | null>(null);
     const [openMenuUserId, setOpenMenuUserId] = useState<string | null>(null);
     const [roomMenuOpen, setRoomMenuOpen] = useState(false);
+    const [groupPickerOpen, setGroupPickerOpen] = useState(false);
+    const [invitePickerRoom, setInvitePickerRoom] = useState<ChatRoom | null>(null);
 
     const { publish, subscribe, onError } = useStomp();
     const roomSubsRef = useRef<Map<string, SubscriptionHandle>>(new Map());
@@ -52,14 +55,11 @@ export default function ChatWindow({ isOpen }: Props) {
     const selectedRoomRef = useRef<string | null>(null);
     const toastIdCounter = useRef(0);
     const openSeqRef = useRef(0);
-    const pendingDMReceiverRef = useRef<string | null>(null);
-    const pendingDMTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const [pendingDMFriend, setPendingDMFriend] = useState<User | null>(null);
+    const [creatingRoomLabel, setCreatingRoomLabel] = useState<string | null>(null);
     const pageRef = useRef(1);
     const hasMoreRef = useRef(true);
     const loadingOlderRef = useRef(false);
     const [loadingOlder, setLoadingOlder] = useState(false);
-    // 'bottom': 최하단으로 스크롤 / 'preserve': 과거 메시지 prepend 후 보던 위치 유지
     const scrollBehaviorRef = useRef<{ mode: 'bottom' | 'preserve'; prevScrollHeight: number; prevScrollTop: number }>({
         mode: 'bottom', prevScrollHeight: 0, prevScrollTop: 0,
     });
@@ -73,7 +73,6 @@ export default function ChatWindow({ isOpen }: Props) {
 
     useEffect(() => {
         isOpenRef.current = isOpen;
-        // 창을 다시 열면 보고 있던 방의 안읽음 카운트 해제
         if (isOpen && selectedRoomRef.current) {
             const roomId = selectedRoomRef.current;
             setRooms(prev => prev.map(r => r.id === roomId ? { ...r, messageCount: 0 } : r));
@@ -157,11 +156,10 @@ export default function ChatWindow({ isOpen }: Props) {
 
         try {
             const messageList = await getChatMessages(roomId, 1);
-            if (seq !== openSeqRef.current) return; // 다른 방을 열었으면 늦은 응답 무시
+            if (seq !== openSeqRef.current) return; 
 
             const fetched = messageList?.result || [];
             hasMoreRef.current = fetched.length > 0;
-            // 로드 중 실시간으로 도착해 이미 append된 메시지와 id 기준 병합 (유실 방지)
             setChatList(prev => {
                 const fetchedIds = new Set(fetched.map(m => m.id));
                 const arrivedDuringFetch = prev.filter(m => m.roomId === roomId && !fetchedIds.has(m.id));
@@ -221,15 +219,6 @@ export default function ChatWindow({ isOpen }: Props) {
         }
     }, [loadOlderMessages]);
 
-    const clearPendingDM = useCallback(() => {
-        pendingDMReceiverRef.current = null;
-        setPendingDMFriend(null);
-        if (pendingDMTimeoutRef.current) {
-            clearTimeout(pendingDMTimeoutRef.current);
-            pendingDMTimeoutRef.current = null;
-        }
-    }, []);
-
     const upsertRoom = useCallback((room: ChatRoom) => {
         setRooms(prev => {
             if (prev.some(r => r.id === room.id)) return prev;
@@ -237,19 +226,40 @@ export default function ChatWindow({ isOpen }: Props) {
         });
     }, []);
 
+    const createAndOpenRoom = useCallback(async (
+        roomType: 'DIRECT' | 'GROUP',
+        roomName: string,
+        participantIds: string[],
+        label: string,
+    ) => {
+        setActiveNav('rooms');
+        setSelectedRoom(null);
+        setChatList([]);
+        setCreatingRoomLabel(label);
+
+        try {
+            const response = await createChatRoom(roomType, roomName, participantIds);
+            const room = response?.room;
+            if (!room) {
+                setError('대화방 생성 응답이 올바르지 않습니다.');
+                return;
+            }
+            upsertRoom(room);
+            handleOpenChatRoom(room.id);
+        } catch (err) {
+            showError(err, '대화방을 만들지 못했습니다.');
+        } finally {
+            setCreatingRoomLabel(null);
+        }
+    }, [upsertRoom, handleOpenChatRoom, showError]);
+
     useEffect(() => {
         const publicSub = subscribe(TOPIC_PUBLIC, msg => showToast(msg.body));
 
         const roomQueueSub = subscribe(QUEUE_PRIVATE_ROOM, msg => {
             const room: ChatRoom = JSON.parse(msg.body);
-            upsertRoom(room);
 
-            const pending = pendingDMReceiverRef.current;
-            if (pending && room.participants?.includes(pending)) {
-                clearPendingDM();
-                setActiveNav('rooms');
-                handleOpenChatRoom(room.id);
-            }
+            upsertRoom(room);
         });
 
         const errorQueueSub = subscribe(QUEUE_ERRORS, msg => {
@@ -269,9 +279,8 @@ export default function ChatWindow({ isOpen }: Props) {
             errorQueueSub.unsubscribe();
             removeErrorListener();
         };
-    }, [subscribe, onError, showToast, upsertRoom, handleOpenChatRoom, clearPendingDM]);
+    }, [subscribe, onError, showToast, upsertRoom]);
 
-    // 방 구독 동기화: 새 방 구독, 목록에서 빠진 방 해제
     useEffect(() => {
         const currentIds = new Set(rooms.map(r => r.id));
 
@@ -282,12 +291,10 @@ export default function ChatWindow({ isOpen }: Props) {
                 const newMessage: ChatMessage = JSON.parse(msg.body);
                 const isMine = newMessage.senderId === myInfoRef.current?.userId;
                 const isSystem = newMessage.type === 'LEAVE' || newMessage.type === 'ENTER';
-                // 창이 열려 있고 해당 방을 보고 있는 경우에만 "읽은 것"으로 간주
                 const isRoomVisible = isOpenRef.current && room.id === selectedRoomRef.current;
 
                 if (newMessage.type === 'LEAVE') {
                     if (isMine) {
-                        // 다른 탭/기기에서 내가 나간 경우 — 이 탭에서도 방 제거 (구독 해제는 rooms effect가 수행)
                         setRooms(prev => prev.filter(r => r.id !== room.id));
                         if (selectedRoomRef.current === room.id) {
                             setSelectedRoom(null);
@@ -295,7 +302,7 @@ export default function ChatWindow({ isOpen }: Props) {
                         }
                         return;
                     }
-                    // 나간 유저를 참여자 목록에서 제거
+                    
                     setRooms(prev => prev.map(r =>
                         r.id === room.id
                             ? { ...r, participants: (r.participants || []).filter(p => p !== newMessage.senderId) }
@@ -303,11 +310,20 @@ export default function ChatWindow({ isOpen }: Props) {
                     ));
                 }
 
+                if (newMessage.type === 'ENTER') {
+                    setRooms(prev => prev.map(r => {
+                        if (r.id !== room.id) return r;
+                        const participants = r.participants || [];
+                        return participants.includes(newMessage.senderId)
+                            ? r
+                            : { ...r, participants: [...participants, newMessage.senderId] };
+                    }));
+                }
+
                 if (room.id === selectedRoomRef.current) {
                     appendMessage(newMessage);
                 }
 
-                // 시스템 메시지(입장/퇴장)는 안읽음 카운트·알림 대상에서 제외
                 if (!isRoomVisible && !isMine && !isSystem) {
                     setRooms(prev => prev.map(r =>
                         r.id === room.id ? { ...r, messageCount: (r.messageCount || 0) + 1 } : r
@@ -326,15 +342,11 @@ export default function ChatWindow({ isOpen }: Props) {
         });
     }, [rooms, subscribe, appendMessage, showNotification]);
 
-    // 언마운트 시 방 구독 전체 해제 (v1은 해제되지 않아 중복 수신 발생)
     useEffect(() => {
         const roomSubs = roomSubsRef.current;
         return () => {
             roomSubs.forEach(sub => sub.unsubscribe());
             roomSubs.clear();
-            if (pendingDMTimeoutRef.current) {
-                clearTimeout(pendingDMTimeoutRef.current);
-            }
         };
     }, []);
 
@@ -353,27 +365,38 @@ export default function ChatWindow({ isOpen }: Props) {
         );
 
         if (existingRoom) {
-            clearPendingDM();
             setActiveNav('rooms');
             handleOpenChatRoom(existingRoom.id);
             return;
         }
 
-        clearPendingDM();
-        pendingDMReceiverRef.current = friend.userId;
-        setPendingDMFriend(friend);
-        setActiveNav('rooms');
-        setSelectedRoom(null);
-        setChatList([]);
-        publish(APP_PRIVATE_MESSAGE, { receiverId: friend.userId });
+        createAndOpenRoom('DIRECT', friend.nickname, [friend.userId], `${friend.nickname}님과의 대화방`);
+    }, [rooms, handleOpenChatRoom, createAndOpenRoom]);
 
-        pendingDMTimeoutRef.current = setTimeout(() => {
-            if (pendingDMReceiverRef.current === friend.userId) {
-                clearPendingDM();
-                setError('대화방 응답이 없습니다. 잠시 후 다시 시도해주세요.');
-            }
-        }, 7000);
-    }, [rooms, publish, handleOpenChatRoom, clearPendingDM]);
+    const handleCreateGroupChat = useCallback((members: User[]) => {
+        setGroupPickerOpen(false);
+        if (members.length === 0) return;
+
+        const label = members.map(m => m.nickname).join(', ');
+        createAndOpenRoom('GROUP', label, members.map(m => m.userId), `${label}님과의 그룹 대화방`);
+    }, [createAndOpenRoom]);
+
+    const handleInviteMembers = useCallback((members: User[]) => {
+        const room = invitePickerRoom;
+        setInvitePickerRoom(null);
+        if (!room || members.length === 0) return;
+
+        if (room.roomType === 'DIRECT') {
+            const others = (room.participants || []).filter(id => id !== myInfo?.userId);
+            const groupMemberIds = Array.from(new Set([...others, ...members.map(m => m.userId)]));
+            const label = groupMemberIds.map(id => nicknameByUserId.get(id) || id).join(', ');
+
+            createAndOpenRoom('GROUP', label, groupMemberIds, `${label}님과의 그룹 대화방`);
+            return;
+        }
+
+        publish(appInviteRoom(room.id), { receiverIds: members.map(m => m.userId) });
+    }, [invitePickerRoom, myInfo, nicknameByUserId, publish, createAndOpenRoom]);
 
     const handleLeaveRoom = useCallback(async (roomId: string) => {
         if (!window.confirm('채팅방을 나가시겠습니까?')) return;
@@ -408,6 +431,17 @@ export default function ChatWindow({ isOpen }: Props) {
 
     const currentRoom = rooms.find(r => r.id === selectedRoom) ?? null;
 
+    const getRoomDisplayName = (room: ChatRoom) => {
+        const others = (room.participants || []).filter(id => id !== myInfo?.userId);
+        
+        if (others.length === 0) return '(대화상대 없음)';
+        
+        if (room.roomType === 'DIRECT') {
+            return nicknameByUserId.get(others[0]) || room.roomName || others[0];
+        }
+        return room.roomName;
+    };
+
     return (
         <>
         <div className={isOpen ? styles.chatWindow : styles.chatWindowHidden}>
@@ -419,6 +453,14 @@ export default function ChatWindow({ isOpen }: Props) {
                     <FaCommentAlt size={24} />
                     {totalUnread > 0 &&
                         <span className={styles.messageAllCount}>{totalUnread}</span>}
+                </button>
+                <button
+                    className={styles.navBottomButton}
+                    onClick={() => setGroupPickerOpen(true)}
+                    title="그룹채팅 만들기"
+                    aria-label="그룹채팅 만들기"
+                >
+                    <FaUserPlus size={20} />
                 </button>
             </div>
             <div className={styles.chatList}>
@@ -452,9 +494,9 @@ export default function ChatWindow({ isOpen }: Props) {
                                 key={room.id}
                                 onClick={() => handleOpenChatRoom(room.id)}
                                 className={selectedRoom === room.id ? styles.selectedRoom : ''}
-                                title={room.roomName}
+                                title={getRoomDisplayName(room)}
                             >
-                                {room.roomName}
+                                {getRoomDisplayName(room)}
                                 {room.messageCount > 0 &&
                                     <span className={styles.messageCount}>{room.messageCount}</span>}
                             </li>
@@ -465,7 +507,7 @@ export default function ChatWindow({ isOpen }: Props) {
             <div className={styles.chatMain}>
                 {currentRoom && (
                     <div className={styles.chatHeader}>
-                        <span className={styles.chatHeaderTitle} title={currentRoom.roomName}>{currentRoom.roomName}</span>
+                        <span className={styles.chatHeaderTitle} title={getRoomDisplayName(currentRoom)}>{getRoomDisplayName(currentRoom)}</span>
                         <button
                             className={styles.chatHeaderMenuButton}
                             onClick={() => setRoomMenuOpen(prev => !prev)}
@@ -484,6 +526,12 @@ export default function ChatWindow({ isOpen }: Props) {
                                         </li>
                                     ))}
                                 </ul>
+                                <button
+                                    className={styles.inviteButton}
+                                    onClick={() => { setInvitePickerRoom(currentRoom); setRoomMenuOpen(false); }}
+                                >
+                                    <FaUserPlus /> 초대하기
+                                </button>
                                 <button
                                     className={styles.leaveButton}
                                     onClick={() => handleLeaveRoom(currentRoom.id)}
@@ -527,9 +575,9 @@ export default function ChatWindow({ isOpen }: Props) {
                                 <p>메시지가 없습니다.</p>
                             </div>
                         )
-                    ) : pendingDMFriend ? (
+                    ) : creatingRoomLabel ? (
                         <div className={styles.noRoomSelected}>
-                            <p>{pendingDMFriend.nickname}님과의 대화방을 여는 중...</p>
+                            <p>{creatingRoomLabel}을 여는 중...</p>
                         </div>
                     ) : (
                         <div className={styles.noRoomSelected}>
@@ -566,6 +614,30 @@ export default function ChatWindow({ isOpen }: Props) {
         )}
         {profileUser && (
             <ProfileModal user={profileUser} onClose={() => setProfileUser(null)} />
+        )}
+        {groupPickerOpen && (
+            <MemberPickerModal
+                title="그룹채팅 만들기"
+                description="대화할 회원을 선택해주세요."
+                confirmLabel="대화 시작"
+                candidates={friends.filter(f => f.userId !== myInfo?.userId)}
+                onConfirm={handleCreateGroupChat}
+                onClose={() => setGroupPickerOpen(false)}
+            />
+        )}
+        {invitePickerRoom && (
+            <MemberPickerModal
+                title="대화상대 초대"
+                description={invitePickerRoom.roomType === 'DIRECT'
+                    ? '1:1 대화방에서 초대하면 새로운 그룹채팅방이 만들어집니다.'
+                    : '이 대화방에 초대할 회원을 선택해주세요.'}
+                confirmLabel="초대"
+                candidates={friends.filter(f =>
+                    f.userId !== myInfo?.userId && !(invitePickerRoom.participants || []).includes(f.userId)
+                )}
+                onConfirm={handleInviteMembers}
+                onClose={() => setInvitePickerRoom(null)}
+            />
         )}
         {error && (
             <ErrorModal message={error} onClose={() => setError(null)} />

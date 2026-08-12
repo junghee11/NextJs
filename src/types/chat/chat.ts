@@ -28,3 +28,7 @@ export interface ChatRoomListResponse {
 export interface ChatMessageListResponse {
     result: ChatMessage[];
 }
+
+export interface CreateChatRoomResponse {
+    room: ChatRoom;
+}

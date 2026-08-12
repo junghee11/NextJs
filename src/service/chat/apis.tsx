@@ -1,6 +1,6 @@
 import api from "../ApiClient"
 import { FriendListResponse } from "../../types/user/user";
-import { ChatRoomListResponse, ChatMessageListResponse } from "../../types/chat/chat";
+import { ChatRoomListResponse, ChatMessageListResponse, CreateChatRoomResponse } from "../../types/chat/chat";
 
 export const getChatFriends = async () => {
     return await api.get<FriendListResponse>('/mypage/chat/friend');
@@ -16,4 +16,12 @@ export const getChatMessages = async (roomId : string, page : number) => {
 
 export const leaveChatRoom = async (roomId : string) => {
     return await api.delete(`/mypage/chat/room/${roomId}`);
+}
+
+export const createChatRoom = async (roomType : string, roomName : string, participants : string[]) => {
+    return await api.post<CreateChatRoomResponse>(`/mypage/chat/room`, {
+        roomType,
+        roomName,
+        participants,
+    });
 }

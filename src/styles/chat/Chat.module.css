@@ -43,6 +43,7 @@
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
+    flex-shrink: 0;
 }
 
 .chatNav button {
@@ -373,6 +374,134 @@
     font-size: 14px;
     color: #050505;
     border-bottom: 1px solid #f7f7f7;
+}
+
+/* 좌측 네비 하단 고정 아이콘 버튼 */
+.navBottomButton {
+    margin-top: auto;
+    margin-bottom: 14px;
+    width: 34px;
+    height: 34px;
+    padding: 0 !important;
+    border-radius: 50%;
+    background-color: #e7f3ff !important;
+    color: #0070f3 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.navBottomButton:hover {
+    background-color: #0070f3 !important;
+    color: white !important;
+}
+
+.inviteButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px;
+    border: none;
+    border-top: 1px solid #f0f0f0;
+    background-color: white;
+    color: #0070f3;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.inviteButton:hover {
+    background-color: #e7f3ff;
+}
+
+/* ===== 회원 선택 모달 ===== */
+
+.memberPickerModal {
+    position: relative;
+    width: 320px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    padding: 24px 22px 20px;
+    animation: popIn 0.15s ease-out;
+}
+
+.memberPickerTitle {
+    margin: 0 0 6px;
+    font-size: 17px;
+    color: #050505;
+}
+
+.memberPickerDescription {
+    margin: 0 0 12px;
+    font-size: 12px;
+    color: #65676b;
+    line-height: 1.4;
+}
+
+.memberPickerList {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+}
+
+.memberPickerList li {
+    border-bottom: 1px solid #f7f7f7;
+}
+
+.memberPickerList label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #050505;
+    cursor: pointer;
+}
+
+.memberPickerList label:hover {
+    background-color: #f5f5f5;
+}
+
+.memberPickerList input[type="checkbox"] {
+    accent-color: #0070f3;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.memberPickerEmpty {
+    padding: 18px 14px;
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+}
+
+.memberPickerConfirm {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    border-radius: 20px;
+    background-color: #0070f3;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.memberPickerConfirm:disabled {
+    background-color: #c7d3de;
+    cursor: not-allowed;
+}
+
+.memberPickerConfirm:not(:disabled):hover {
+    background-color: #005ac4;
 }
 
 .leaveButton {
